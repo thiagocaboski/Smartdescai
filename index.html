@@ -5,93 +5,193 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartDescai</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-font-family:Arial;
-background:#0b0b0f;
-color:#fff;
+:root{
+--bg:#0b0b0f;
+--card:#12121a;
+--accent:#ff4d00;
+--text:#f5f5f5;
+--muted:#8a8a9e;
+--border:rgba(255,255,255,0.08)
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter';background:var(--bg);color:var(--text)}
+
+/* NAV */
+nav{
 display:flex;
-justify-content:center;
-align-items:center;
+justify-content:space-between;
+padding:1.2rem 5%;
+border-bottom:1px solid var(--border);
+position:sticky;top:0;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px)
+}
+
+.logo{font-weight:800;font-size:1.2rem}
+.logo span{color:var(--accent)}
+
+nav button{
+background:var(--accent);
+border:none;
+padding:0.5rem 1rem;
+color:#fff;
+cursor:pointer
+}
+
+/* HERO */
+.hero{
+padding:6rem 5%;
+max-width:900px
+}
+
+.hero h1{
+font-size:clamp(2.5rem,6vw,4rem);
+font-weight:800;
+}
+
+.hero p{
+margin-top:1rem;
+color:var(--muted)
+}
+
+/* LOGIN */
+.auth{
+display:none;
+padding:5rem 5%;
+max-width:400px;
+margin:auto
+}
+
+.auth input{
+width:100%;
+padding:0.8rem;
+margin-bottom:1rem;
+background:var(--card);
+border:1px solid var(--border);
+color:#fff
+}
+
+.auth button{
+width:100%;
+padding:0.8rem;
+background:var(--accent);
+border:none;
+color:#fff;
+cursor:pointer
+}
+
+/* DASHBOARD */
+.dashboard{
+display:none;
+}
+
+.sidebar{
+width:220px;
+background:var(--card);
 height:100vh;
+position:fixed;
+padding:2rem 1rem;
+border-right:1px solid var(--border)
 }
 
-.container{
-background:#12121a;
+.sidebar h2{
+font-size:1rem;
+margin-bottom:2rem
+}
+
+.sidebar a{
+display:block;
+margin-bottom:1rem;
+color:var(--muted);
+text-decoration:none
+}
+
+.main{
+margin-left:220px;
 padding:2rem;
-width:300px;
-border-radius:8px;
 }
 
-input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-background:#1a1a25;
-border:none;
-color:#fff;
+.card{
+background:var(--card);
+padding:1.5rem;
+border:1px solid var(--border);
+margin-bottom:1rem;
 }
 
-button{
-width:100%;
-padding:10px;
-background:#ff4d00;
-border:none;
-color:#fff;
-cursor:pointer;
+/* MOBILE */
+@media(max-width:768px){
+.sidebar{display:none}
+.main{margin-left:0}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<nav>
+<div class="logo">Smart<span>Descai</span></div>
+<button onclick="showLogin()">Entrar</button>
+</nav>
+
+<!-- HOME -->
+<section class="hero" id="home">
+<h1>Transforme seu negócio em uma máquina de vendas</h1>
+<p>Plataforma inteligente de marketing e crescimento digital.</p>
+</section>
+
+<!-- LOGIN -->
+<section class="auth" id="auth">
+<h2>Entrar</h2>
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Senha">
+<button onclick="login()">Acessar</button>
+</section>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+<div class="sidebar">
 <h2>SmartDescai</h2>
+<a href="#">Dashboard</a>
+<a href="#">Campanhas</a>
+<a href="#">Relatórios</a>
+<a href="#">Configurações</a>
+</div>
 
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Senha">
+<div class="main">
+<h1>Dashboard</h1>
 
-<button onclick="signup()">Criar conta</button>
-<button onclick="login()">Entrar</button>
+<div class="card">
+<h3>Leads gerados</h3>
+<p>+320%</p>
+</div>
 
-<p id="msg"></p>
+<div class="card">
+<h3>Investimento</h3>
+<p>R$ 12.000</p>
+</div>
+
+<div class="card">
+<h3>ROI</h3>
+<p>5.4x retorno</p>
+</div>
+
+</div>
 </div>
 
 <script>
-// 🔥 COLE SUAS CHAVES AQUI
-const supabase = window.supabase.createClient(
-"https://SEU-PROJETO.supabase.co",
-"SUA-ANON-KEY"
-)
-
-// CADASTRO
-async function signup(){
-const email = document.getElementById("email").value
-const password = document.getElementById("password").value
-
-const { error } = await supabase.auth.signUp({ email, password })
-
-document.getElementById("msg").innerText =
-error ? error.message : "Conta criada!"
+function showLogin(){
+document.getElementById("home").style.display="none"
+document.getElementById("auth").style.display="block"
 }
 
-// LOGIN
-async function login(){
-const email = document.getElementById("email").value
-const password = document.getElementById("password").value
-
-const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-
-if(error){
-document.getElementById("msg").innerText = error.message
-}else{
-document.body.innerHTML = `
-<h1>Bem-vindo, ${email}</h1>
-<p>Seu dashboard está pronto 🚀</p>
-`
-}
+function login(){
+document.getElementById("auth").style.display="none"
+document.getElementById("dashboard").style.display="block"
 }
 </script>
 
