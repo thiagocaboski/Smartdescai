@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartDescAi | IA para E-commerce</title>
+<title>NovaMente | Marketing Digital</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root {
-    --bg: #05050a; --card: #0e0e18; --accent: #ff4d00; --accent2: #ffb800;
-    --green: #22c55e; --text: #f0ede8; --muted: #6b6880; --border: rgba(255,255,255,0.07);
+    --bg: #05050a;--card: #0e0e18;--accent: #ff4d00;--accent2: #ffb800;
+    --green: #22c55e;--text: #f0ede8;--muted: #6b6880;--border: rgba(255,255,255,0.07);
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -58,7 +58,6 @@
   .btn-ghost:hover{border-color:rgba(255,255,255,0.3);transform:translateY(-2px)}
   .btn-green{background:var(--green);color:#000;border:1px solid var(--green)}
   .btn-green:hover{background:#16a34a;transform:translateY(-2px)}
-  .btn svg{width:16px;height:16px}
 
   /* MARQUEE */
   .marquee-wrap{overflow:hidden;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,77,0,0.03)}
@@ -72,6 +71,51 @@
   .section-label{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
   h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-0.03em;max-width:600px}
 
+  /* SERVICES */
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;margin-top:4rem;background:var(--border);border:1px solid var(--border)}
+  .service-card{background:var(--bg);padding:2.5rem;transition:background 0.3s;position:relative;overflow:hidden}
+  .service-card:hover{background:var(--card)}
+  .service-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
+  .service-card:hover::after{transform:scaleX(1)}
+  .service-icon{width:44px;height:44px;background:rgba(255,77,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-size:1.2rem}
+  .service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.8rem}
+  .service-card p{color:var(--muted);font-size:0.9rem;line-height:1.7}
+
+  /* RESULTS */
+  .results{background:var(--card)}
+  .results-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .result-items{display:flex;flex-direction:column;gap:1.5rem;margin-top:3rem}
+  .result-item{display:flex;flex-direction:column;gap:0.3rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+  .result-bar-wrap{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:0.5rem}
+  .result-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(0.16,1,0.3,1)}
+  .result-bar.animate{transform:scaleX(1)}
+  .result-top{display:flex;justify-content:space-between;align-items:center}
+  .result-name{font-size:0.85rem}
+  .result-pct{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--accent)}
+
+  /* ECO SECTION */
+  .eco-section{background:linear-gradient(135deg,rgba(34,197,94,0.06),rgba(5,5,10,0));border-top:1px solid rgba(34,197,94,0.15);border-bottom:1px solid rgba(34,197,94,0.15)}
+  .eco-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .eco-badge{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86efac;padding:0.4rem 1rem;border-radius:2px;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem}
+  .eco-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
+  .eco-stat{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);padding:1.5rem;border-radius:4px}
+  .eco-stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--green)}
+  .eco-stat-label{font-size:0.8rem;color:var(--muted);margin-top:0.3rem}
+
+  /* PIX */
+  .pix-section{background:var(--card)}
+  .pix-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .pix-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+  .pix-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#00bdae;letter-spacing:-0.02em}
+  #qrcode{background:#fff;padding:12px;border-radius:6px}
+  #qrcode canvas,#qrcode img{display:block}
+  .pix-key-info{text-align:center}
+  .pix-key-info p{font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem}
+  .pix-key-info strong{color:#00bdae;font-size:1.05rem;font-family:'Syne',sans-serif}
+  .pix-code-box{background:rgba(0,189,174,0.05);border:1px solid rgba(0,189,174,0.2);border-radius:4px;padding:0.8rem 1rem;font-size:0.68rem;color:var(--muted);word-break:break-all;text-align:center;max-width:280px;user-select:all}
+  .pix-copy-btn{background:rgba(0,189,174,0.1);border:1px solid rgba(0,189,174,0.3);color:#00bdae;padding:0.6rem 1.5rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:none;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem}
+  .pix-copy-btn:hover{background:rgba(0,189,174,0.2);transform:translateY(-2px)}
+
   /* AUTH */
   .auth-section{padding:7rem 5%}
   .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem;max-width:900px;margin-left:auto;margin-right:auto}
@@ -83,7 +127,7 @@
   .field label{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
   .field input{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;cursor:text}
   .field input:focus{border-color:rgba(255,77,0,0.5);background:rgba(255,77,0,0.03)}
-  .auth-submit{width:100%;padding:0.85rem;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;cursor:none;transition:all 0.2s;margin-top:0.5rem; text-decoration: none; display: block; text-align: center;}
+  .auth-submit{width:100%;padding:0.85rem;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;cursor:none;transition:all 0.2s;margin-top:0.5rem}
   .auth-login-btn{background:var(--accent);color:#fff;border:none}
   .auth-login-btn:hover{background:#e04400;transform:translateY(-2px)}
   .auth-register-btn{background:transparent;color:var(--text);border:1px solid var(--border)}
@@ -91,15 +135,28 @@
   .auth-link{text-align:center;margin-top:1.2rem;font-size:0.82rem;color:var(--muted)}
   .auth-link a{color:var(--accent);text-decoration:none}
 
+  /* CTA */
+  .cta-section{text-align:center;background:linear-gradient(135deg,rgba(255,77,0,0.08),rgba(255,184,0,0.05));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .contact-info{display:flex;gap:2rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
+  .contact-item{display:flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.85rem}
+  .contact-item a{color:var(--muted);text-decoration:none;transition:color 0.2s}
+  .contact-item a:hover{color:var(--text)}
+
+  /* FOOTER */
+  footer{padding:3rem 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  footer p{color:var(--muted);font-size:0.8rem}
+  .footer-links{display:flex;gap:2rem}
+  .footer-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s}
+  .footer-links a:hover{color:var(--text)}
+  .footer-eco{color:#86efac;font-size:0.78rem}
+
   /* TOAST */
   .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#000;padding:0.8rem 1.5rem;border-radius:4px;font-size:0.85rem;font-weight:500;z-index:9000;transform:translateY(100px);opacity:0;transition:all 0.3s}
   .toast.show{transform:translateY(0);opacity:1}
 
   @media(max-width:768px){
-    .auth-grid{grid-template-columns:1fr;gap:3rem}
+    .results-inner,.eco-inner,.pix-inner,.auth-grid{grid-template-columns:1fr;gap:3rem}
     nav ul{display:none}
-    .cursor, .cursor-ring { display: none !important; }
-    body { cursor: auto !important; }
   }
 </style>
 </head>
@@ -109,68 +166,109 @@
 <div class="toast" id="toast">✓ Código PIX copiado!</div>
 
 <div class="eco-banner">
-  🌳 <strong>20% de cada serviço</strong>&nbsp;é destinado ao plantio de árvores. Crescimento digital que respeita o planeta.
+  🌳 <strong>20% de cada serviço</strong>&nbsp;é destinado ao plantio de árvores. <a href="eco.html" style="color:#86efac; text-decoration: underline;">Saiba mais</a>.
 </div>
 
 <nav>
-  <div class="logo">Smart<span>DescAi</span></div>
+  <div class="logo">Nova<span>Mente</span></div>
   <ul>
-    <li><a href="#servicos">IA</a></li>
-    <li><a href="#eco">🌳 Eco</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#resultados">Resultados</a></li>
+    <li><a href="eco.html">🌳 Eco</a></li>
     <li><a href="#pagamento">PIX</a></li>
     <li><a href="#auth" class="nav-login">Entrar</a></li>
-    <li><a href="#auth" class="nav-cta">Começar →</a></li>
+    <li><a href="#contato" class="nav-cta">Começar →</a></li>
   </ul>
 </nav>
 
 <section class="hero">
   <div class="hero-noise"></div><div class="glow"></div><div class="glow2"></div>
-  <div class="tag">I.A para E-commerce</div>
-  <h1>Smart<span>DescAi</span><br>Venda Mais com<br><em>Inteligência</em></h1>
-  <p class="hero-sub">Descrições de produtos profissionais em segundos. Use a inteligência artificial para dominar o mercado e converter cliques em vendas.</p>
+  <div class="tag">Agência de Marketing Digital</div>
+  <h1>Crescimento<br>que você<br><em>sente</em></h1>
+  <p class="hero-sub">Transformamos marcas em autoridades digitais. Estratégias de tráfego pago, conteúdo e conversão que geram resultado real.</p>
   <div class="hero-actions">
-    <a href="#auth" class="btn btn-primary">Começar Agora <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-    <a href="https://wa.me/5541999689107" class="btn btn-ghost">Suporte WhatsApp</a>
+    <a href="#contato" class="btn btn-primary">Quero crescer agora</a>
+    <a href="#resultados" class="btn btn-ghost">Ver resultados</a>
   </div>
   <div class="hero-stats">
-    <div><div class="stat-num">+320<span>%</span></div><div class="stat-label">Conversão em Vendas</div></div>
-    <div><div class="stat-num">24<span>/7</span></div><div class="stat-label">IA Disponível</div></div>
-    <div><div class="stat-num">R$0<span>,00</span></div><div class="stat-label">Teste Gratuito</div></div>
+    <div><div class="stat-num">+320<span>%</span></div><div class="stat-label">Aumento em leads</div></div>
+    <div><div class="stat-num">180<span>+</span></div><div class="stat-label">Clientes</div></div>
+    <div><div class="stat-num">R$12<span>M</span></div><div class="stat-label">Investido</div></div>
   </div>
 </section>
 
-<div class="marquee-wrap"><div class="marquee">
-  <span class="marquee-item">SmartDescAi</span><span class="marquee-item">Inteligência Artificial</span><span class="marquee-item">Copywriting Profissional</span><span class="marquee-item">E-commerce</span><span class="marquee-item">Shopee & Mercado Livre</span>
-  <span class="marquee-item">SmartDescAi</span><span class="marquee-item">Inteligência Artificial</span><span class="marquee-item">Copywriting Profissional</span><span class="marquee-item">E-commerce</span><span class="marquee-item">Shopee & Mercado Livre</span>
-</div></div>
-
-<section id="auth" class="auth-section">
-  <div style="text-align:center">
-    <div class="section-label">Plataforma SmartDescAi</div>
-    <h2 style="max-width:100%;text-align:center">Acesse a Inteligência</h2>
-    <p style="color:var(--muted);margin-top:1rem">Faça login para começar a gerar suas descrições.</p>
+<section id="servicos">
+  <div class="section-label">O que fazemos</div>
+  <h2>Serviços que impulsionam sua marca</h2>
+  <div class="services-grid">
+    <div class="service-card"><div class="service-icon">🎯</div><h3>Tráfego Pago</h3><p>Campanhas estratégicas no Google e Meta Ads.</p></div>
+    <div class="service-card"><div class="service-icon">🚀</div><h3>Landing Pages</h3><p>Páginas de alta conversão para seu negócio.</p></div>
+    <div class="service-card"><div class="service-icon">📊</div><h3>Analytics</h3><p>Dados reais para decisões inteligentes.</p></div>
   </div>
-  <div class="auth-grid">
-    <div class="auth-card highlighted">
-      <h3>Entrar</h3>
-      <p class="auth-sub">Acesse sua área de trabalho da IA.</p>
-      <div class="field"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
-      <div class="field"><label>Senha</label><input type="password" placeholder="••••••••"></div>
-      <a href="dashboard.html" class="auth-submit auth-login-btn">Entrar na conta →</a>
-      <div class="auth-link"><a href="#">Esqueci minha senha</a></div>
+</section>
+
+<section id="eco" class="eco-section">
+  <div class="eco-inner">
+    <div>
+      <div style="font-size:5rem;margin-bottom:1.5rem;">🌳</div>
+      <div class="eco-badge">🌱 Compromisso Ambiental</div>
+      <h2 style="color:#86efac;">20% vai para o planeta</h2>
+      <p style="color:var(--muted);line-height:1.8;margin-top:1.5rem">Cada cliente que cresce conosco ajuda a reflorestar o Brasil.</p>
+      <div style="margin-top:2rem"><a href="eco.html" class="btn btn-green">Crescer com propósito →</a></div>
     </div>
-    <div class="auth-card">
-      <h3>Cadastrar</h3>
-      <p class="auth-sub">Novo por aqui? Crie sua conta grátis.</p>
-      <div class="field"><label>Nome completo</label><input type="text" placeholder="Seu nome"></div>
-      <div class="field"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
-      <div class="field"><label>Senha</label><input type="password" placeholder="Crie uma senha forte"></div>
-      <button class="auth-submit auth-register-btn" onclick="authMsg('Cadastro realizado! Agora faça login.')">Criar minha conta →</button>
+    <div>
+      <div class="eco-stats">
+        <div class="eco-stat"><div class="eco-stat-num">1.200+</div><div class="eco-stat-label">Árvores plantadas</div></div>
+        <div class="eco-stat"><div class="eco-stat-num">20%</div><div class="eco-stat-label">De cada serviço</div></div>
+      </div>
     </div>
   </div>
 </section>
+
+<section id="pagamento" class="pix-section">
+  <div class="pix-inner">
+    <div>
+      <div class="section-label">Pagamento facilitado</div>
+      <h2>Pague com PIX</h2>
+      <p style="color:var(--muted);margin-top:1.5rem;line-height:1.8;">Escaneie o QR Code ou copie o código Copia e Cola abaixo.</p>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <div class="pix-card">
+        <div class="pix-logo">PIX ✦</div>
+        <div id="qrcode"></div>
+        <div class="pix-key-info">
+          <p>Chave PIX — Telefone</p>
+          <strong>+55 (41) 99968-9107</strong>
+        </div>
+        <div class="pix-code-box" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
+        
+        <button class="pix-copy-btn" onclick="copyPix()">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M3 11V3a1 1 0 0 1 1-1h8"/></svg>
+          Copiar código PIX
+        </button>
+        <p style="font-size:0.72rem;color:var(--muted)">Titular: Thiago Caboski</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contato" class="cta-section">
+  <div class="section-label">Pronto para crescer?</div>
+  <h2>Vamos construir algo grande juntos</h2>
+  <div class="contact-info">
+    <div class="contact-item">✉ <a href="mailto:thiagocaboski28@gmail.com">thiagocaboski28@gmail.com</a></div>
+    <div class="contact-item">📱 <a href="https://wa.me/5541999689107">(41) 99968-9107</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">Nova<span>Mente</span></div>
+  <p>© 2025 NovaMente Digital</p>
+  <div class="footer-eco">🌳 20% para o planeta</div>
+</footer>
 
 <script>
+  // Cursor
   const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
   let mx=0,my=0,rx=0,ry=0;
   document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
@@ -179,11 +277,41 @@
     ring.style.left=rx+'px';ring.style.top=ry+'px';
     requestAnimationFrame(anim)})();
 
-  function authMsg(msg){
-    const t=document.getElementById('toast');
-    t.textContent='✓ '+msg;
+  // PIX PAYLOAD DA IMAGEM
+  const pixPayloadFull = "00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777";
+
+  // Gerar QR Code com o Payload Real
+  window.addEventListener('load', () => {
+    try {
+      new QRCode(document.getElementById("qrcode"), {
+        text: pixPayloadFull,
+        width: 200, height: 200,
+        colorDark: "#000000", colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) { console.error("Erro QR", e); }
+  });
+
+  // Função Copiar Payload
+  function copyPix() {
+    navigator.clipboard.writeText(pixPayloadFull).then(() => {
+      showToast("Copia e Cola copiado!");
+    }).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = pixPayloadFull;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast("Copia e Cola copiado!");
+    });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
     t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3000);
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
 </script>
 </body>
