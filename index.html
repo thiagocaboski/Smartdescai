@@ -3,186 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartDescAI | Inteligência e Sustentabilidade</title>
+<title>SmartDescAi | IA para E-commerce</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root {
-    --bg: #05050a;
-    --card: #0e0e18;
-    --accent: #00ff88; /* Mudei para verde para refletir a causa ambiental */
-    --accent-alt: #ff4d00;
-    --text: #f0ede8;
-    --muted: #6b6880;
-    --border: rgba(255,255,255,0.07);
+    --bg: #05050a; --card: #0e0e18; --accent: #ff4d00; --accent2: #ffb800;
+    --green: #22c55e; --text: #f0ede8; --muted: #6b6880; --border: rgba(255,255,255,0.07);
   }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+  .cursor{width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+  .cursor-ring{width:36px;height:36px;border:1px solid rgba(255,77,0,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform 0.35s ease;transform:translate(-50%,-50%)}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
-
-  /* Custom cursor */
-  .cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.15s ease; transform: translate(-50%, -50%); }
-  .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.35s ease; transform: translate(-50%, -50%); }
+  /* ECO BANNER */
+  .eco-banner{background:linear-gradient(90deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05));border-bottom:1px solid rgba(34,197,94,0.2);padding:0.6rem 5%;display:flex;align-items:center;justify-content:center;gap:0.6rem;font-size:0.8rem;color:#86efac}
+  .eco-banner strong{color:var(--green)}
 
   /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 5%; backdrop-filter: blur(12px); background: rgba(5,5,10,0.7); border-bottom: 1px solid var(--border); }
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em; }
-  .logo span { color: var(--accent); }
-  nav ul { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
-  nav ul a { color: var(--muted); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; transition: color 0.2s; }
-  nav ul a:hover { color: var(--text); }
-  
-  .btn-login { border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 4px; }
-  .nav-cta { background: var(--accent); color: #000 !important; padding: 0.55rem 1.2rem; border-radius: 4px; font-weight: 700 !important; }
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 5%;backdrop-filter:blur(12px);background:rgba(5,5,10,0.85);border-bottom:1px solid var(--border)}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-0.03em}
+  .logo span{color:var(--accent)}
+  nav ul{list-style:none;display:flex;gap:1.8rem;align-items:center}
+  nav ul a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.2s}
+  nav ul a:hover{color:var(--text)}
+  .nav-cta{background:var(--accent)!important;color:#fff!important;padding:0.5rem 1.1rem;border-radius:2px}
+  .nav-login{border:1px solid var(--border);padding:0.5rem 1rem;border-radius:2px}
 
   /* HERO */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 10rem 5% 5rem; position: relative; }
-  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 7vw, 6rem); line-height: 0.95; max-width: 900px; margin-bottom: 20px;}
-  h1 em { font-style: normal; color: var(--accent); }
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 5% 5rem;position:relative;overflow:hidden}
+  .hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4}
+  .glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,0,0.12) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;animation:pulse 6s ease-in-out infinite}
+  .glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,184,0,0.08) 0%,transparent 70%);bottom:50px;left:5%;pointer-events:none;animation:pulse 8s ease-in-out infinite reverse}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:0.7}}
+  .tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,77,0,0.1);border:1px solid rgba(255,77,0,0.3);color:var(--accent);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 0.8rem;border-radius:2px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.6s 0.2s forwards}
+  .tag::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.5s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3rem,8vw,7.5rem);line-height:0.95;letter-spacing:-0.04em;max-width:900px;opacity:0;animation:fadeUp 0.7s 0.4s forwards}
+  h1 em{font-style:normal;-webkit-text-stroke:1px var(--accent);color:transparent}
+  .hero-sub{margin-top:2rem;font-size:1.1rem;line-height:1.7;color:var(--muted);max-width:480px;opacity:0;animation:fadeUp 0.7s 0.6s forwards}
+  .hero-actions{display:flex;gap:1rem;margin-top:3rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s 0.8s forwards}
+  .hero-stats{display:flex;gap:3rem;margin-top:5rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s 1s forwards;padding-top:3rem;border-top:1px solid var(--border)}
+  .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1}
+  .stat-num span{color:var(--accent)}
+  .stat-label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ONG SECTION */
-  .ong-badge {
-    display: flex; align-items: center; gap: 10px; background: rgba(0, 255, 136, 0.1);
-    padding: 1rem; border: 1px dashed var(--accent); border-radius: 8px; margin-top: 2rem; max-width: 500px;
-  }
-  .ong-badge span { color: var(--accent); font-weight: 700; }
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:400;text-decoration:none;cursor:none;transition:all 0.2s;border:none}
+  .btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+  .btn-primary:hover{background:#e04400;transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-ghost:hover{border-color:rgba(255,255,255,0.3);transform:translateY(-2px)}
+  .btn-green{background:var(--green);color:#000;border:1px solid var(--green)}
+  .btn-green:hover{background:#16a34a;transform:translateY(-2px)}
+  .btn svg{width:16px;height:16px}
 
-  /* PAYMENT SECTION */
-  .payment-card {
-    background: var(--card); border: 1px solid var(--border); padding: 2rem;
-    border-radius: 12px; text-align: center; max-width: 400px; margin: 4rem auto;
-  }
-  .qrcode-placeholder {
-    width: 200px; height: 200px; background: white; margin: 1.5rem auto;
-    display: flex; align-items: center; justify-content: center; border-radius: 8px;
-    border: 4px solid var(--accent);
-  }
-  .price { font-size: 2.5rem; font-family: 'Syne'; font-weight: 800; color: var(--text); }
-  .price span { font-size: 1rem; color: var(--muted); }
+  /* MARQUEE */
+  .marquee-wrap{overflow:hidden;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,77,0,0.03)}
+  .marquee{display:flex;gap:3rem;width:max-content;animation:scroll 20s linear infinite}
+  .marquee-item{white-space:nowrap;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:1.5rem}
+  .marquee-item::after{content:'✦';color:var(--accent);font-size:0.6rem}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* MODAL LOGIN */
-  .modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000;
-    display: none; align-items: center; justify-content: center;
-  }
-  .modal-content {
-    background: var(--card); padding: 3rem; border-radius: 8px; width: 100%; max-width: 400px;
-    border: 1px solid var(--border);
-  }
-  input {
-    width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: #161625;
-    border: 1px solid var(--border); color: white; border-radius: 4px;
-  }
-  .btn-full { width: 100%; background: var(--accent); color: black; border: none; padding: 1rem; font-weight: 700; cursor: pointer; }
+  /* SECTIONS */
+  section{padding:7rem 5%}
+  .section-label{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-0.03em;max-width:600px}
 
-  section { padding: 5rem 5%; }
-  .btn { cursor: none; text-decoration: none; }
-  
-  @media (max-width: 768px) { nav ul { display: none; } }
+  /* AUTH */
+  .auth-section{padding:7rem 5%}
+  .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem;max-width:900px;margin-left:auto;margin-right:auto}
+  .auth-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2.5rem}
+  .auth-card.highlighted{border-top:2px solid var(--accent)}
+  .auth-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:0.5rem}
+  .auth-sub{color:var(--muted);font-size:0.85rem;margin-bottom:2rem}
+  .field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.2rem}
+  .field label{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+  .field input{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;cursor:text}
+  .field input:focus{border-color:rgba(255,77,0,0.5);background:rgba(255,77,0,0.03)}
+  .auth-submit{width:100%;padding:0.85rem;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;cursor:none;transition:all 0.2s;margin-top:0.5rem; text-decoration: none; display: block; text-align: center;}
+  .auth-login-btn{background:var(--accent);color:#fff;border:none}
+  .auth-login-btn:hover{background:#e04400;transform:translateY(-2px)}
+  .auth-register-btn{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .auth-register-btn:hover{background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+  .auth-link{text-align:center;margin-top:1.2rem;font-size:0.82rem;color:var(--muted)}
+  .auth-link a{color:var(--accent);text-decoration:none}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#000;padding:0.8rem 1.5rem;border-radius:4px;font-size:0.85rem;font-weight:500;z-index:9000;transform:translateY(100px);opacity:0;transition:all 0.3s}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  @media(max-width:768px){
+    .auth-grid{grid-template-columns:1fr;gap:3rem}
+    nav ul{display:none}
+    .cursor, .cursor-ring { display: none !important; }
+    body { cursor: auto !important; }
+  }
 </style>
 </head>
 <body>
-
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+<div class="toast" id="toast">✓ Código PIX copiado!</div>
 
-<div class="modal" id="loginModal">
-    <div class="modal-content">
-        <h2 style="margin-bottom: 1.5rem; font-family: 'Syne';">Entrar na SmartDescAI</h2>
-        <input type="email" placeholder="Seu E-mail">
-        <input type="password" placeholder="Sua Senha">
-        <button class="btn-full" onclick="alert('Sistema de demonstração')">ENTRAR</button>
-        <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted); text-align: center;">
-            Não tem conta? <a href="#" style="color: var(--accent);">Cadastre-se</a>
-        </p>
-        <button onclick="closeModal()" style="background: none; border: none; color: white; margin-top: 1rem; cursor: pointer; width: 100%;">Fechar</button>
-    </div>
+<div class="eco-banner">
+  🌳 <strong>20% de cada serviço</strong>&nbsp;é destinado ao plantio de árvores. Crescimento digital que respeita o planeta.
 </div>
 
 <nav>
-  <div class="logo">Smart<span>DescAI</span></div>
+  <div class="logo">Smart<span>DescAi</span></div>
   <ul>
-    <li><a href="#proposito">Nosso Propósito</a></li>
-    <li><a href="#pagamento">Assinar</a></li>
-    <li><a href="https://wa.me/5541999689107" target="_blank">WhatsApp</a></li>
-    <li><a href="javascript:void(0)" class="btn-login" onclick="openModal()">Login</a></li>
-    <li><a href="#pagamento" class="nav-cta">Assinar Agora</a></li>
+    <li><a href="#servicos">IA</a></li>
+    <li><a href="#eco">🌳 Eco</a></li>
+    <li><a href="#pagamento">PIX</a></li>
+    <li><a href="#auth" class="nav-login">Entrar</a></li>
+    <li><a href="#auth" class="nav-cta">Começar →</a></li>
   </ul>
 </nav>
 
 <section class="hero">
-  <div class="tag">✦ Inteligência Artificial com Propósito</div>
-  <h1>Poder Digital<br>Consciência <em>Verde</em></h1>
-  
-  <p style="max-width: 600px; color: var(--muted); line-height: 1.6;">
-    A <strong>SmartDescAI</strong> combina o ápice da tecnologia com a preservação do planeta. 
-    Otimize seus processos enquanto ajuda a reflorestar o mundo.
-  </p>
+  <div class="hero-noise"></div><div class="glow"></div><div class="glow2"></div>
+  <div class="tag">I.A para E-commerce</div>
+  <h1>Smart<span>DescAi</span><br>Venda Mais com<br><em>Inteligência</em></h1>
+  <p class="hero-sub">Descrições de produtos profissionais em segundos. Use a inteligência artificial para dominar o mercado e converter cliques em vendas.</p>
+  <div class="hero-actions">
+    <a href="#auth" class="btn btn-primary">Começar Agora <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+    <a href="https://wa.me/5541999689107" class="btn btn-ghost">Suporte WhatsApp</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">+320<span>%</span></div><div class="stat-label">Conversão em Vendas</div></div>
+    <div><div class="stat-num">24<span>/7</span></div><div class="stat-label">IA Disponível</div></div>
+    <div><div class="stat-num">R$0<span>,00</span></div><div class="stat-label">Teste Gratuito</div></div>
+  </div>
+</section>
 
-  <div class="ong-badge" id="proposito">
-    <div style="font-size: 2rem;">🌱</div>
-    <div>
-        <p>Somos <span>Companheiros de ONG</span></p>
-        <p style="font-size: 0.85rem; color: var(--muted);">20% de cada assinatura é destinado diretamente ao plantio de árvores e recuperação de áreas degradadas.</p>
+<div class="marquee-wrap"><div class="marquee">
+  <span class="marquee-item">SmartDescAi</span><span class="marquee-item">Inteligência Artificial</span><span class="marquee-item">Copywriting Profissional</span><span class="marquee-item">E-commerce</span><span class="marquee-item">Shopee & Mercado Livre</span>
+  <span class="marquee-item">SmartDescAi</span><span class="marquee-item">Inteligência Artificial</span><span class="marquee-item">Copywriting Profissional</span><span class="marquee-item">E-commerce</span><span class="marquee-item">Shopee & Mercado Livre</span>
+</div></div>
+
+<section id="auth" class="auth-section">
+  <div style="text-align:center">
+    <div class="section-label">Plataforma SmartDescAi</div>
+    <h2 style="max-width:100%;text-align:center">Acesse a Inteligência</h2>
+    <p style="color:var(--muted);margin-top:1rem">Faça login para começar a gerar suas descrições.</p>
+  </div>
+  <div class="auth-grid">
+    <div class="auth-card highlighted">
+      <h3>Entrar</h3>
+      <p class="auth-sub">Acesse sua área de trabalho da IA.</p>
+      <div class="field"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
+      <div class="field"><label>Senha</label><input type="password" placeholder="••••••••"></div>
+      <a href="dashboard.html" class="auth-submit auth-login-btn">Entrar na conta →</a>
+      <div class="auth-link"><a href="#">Esqueci minha senha</a></div>
+    </div>
+    <div class="auth-card">
+      <h3>Cadastrar</h3>
+      <p class="auth-sub">Novo por aqui? Crie sua conta grátis.</p>
+      <div class="field"><label>Nome completo</label><input type="text" placeholder="Seu nome"></div>
+      <div class="field"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
+      <div class="field"><label>Senha</label><input type="password" placeholder="Crie uma senha forte"></div>
+      <button class="auth-submit auth-register-btn" onclick="authMsg('Cadastro realizado! Agora faça login.')">Criar minha conta →</button>
     </div>
   </div>
 </section>
 
-<section id="pagamento" style="background: rgba(255,255,255,0.02);">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <div class="tag">Planos</div>
-        <h2 style="font-family: 'Syne'; font-size: 3rem;">Acesso Completo</h2>
-    </div>
-
-    <div class="payment-card">
-        <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; color: var(--accent);">Assinatura Mensal</p>
-        <div class="price">R$ 49,90<span>/mês</span></div>
-        
-        <div class="qrcode-placeholder">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=41999689107" alt="QR Code Pagamento" style="width: 100%; padding: 10px;">
-        </div>
-
-        <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Escaneie o QR Code acima para pagar via PIX</p>
-        
-        <ul style="text-align: left; list-style: none; font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem;">
-            <li style="margin-bottom: 8px;">✅ Acesso total às IAs</li>
-            <li style="margin-bottom: 8px;">✅ Suporte Prioritário</li>
-            <li style="margin-bottom: 8px;">✅ <strong>Contribuição: 1 Árvore Plantada</strong></li>
-        </ul>
-
-        <a href="https://wa.me/5541999689107?text=Oi, fiz o pagamento de 49.90, quero liberar meu acesso" class="btn-full" style="display: block; text-decoration: none; text-align: center;">ENVIAR COMPROVANTE</a>
-    </div>
-</section>
-
-<footer style="padding: 4rem 5%; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
-    <div>
-        <div class="logo">Smart<span>DescAI</span></div>
-        <p style="color: var(--muted); font-size: 0.8rem; margin-top: 10px;">Contato: (41) 99968-9107</p>
-    </div>
-    <div style="display: flex; gap: 2rem;">
-        <a href="https://wa.me/5541999689107" style="color: var(--muted); text-decoration: none;">WhatsApp</a>
-        <a href="mailto:contato@smartdescai.com.br" style="color: var(--muted); text-decoration: none;">E-mail</a>
-    </div>
-</footer>
-
 <script>
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  
-  function animateCursor() {
-    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(animateCursor);
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  (function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+    cursor.style.left=mx+'px';cursor.style.top=my+'px';
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(anim)})();
+
+  function authMsg(msg){
+    const t=document.getElementById('toast');
+    t.textContent='✓ '+msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
   }
-  animateCursor();
-
-  function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
-  function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
