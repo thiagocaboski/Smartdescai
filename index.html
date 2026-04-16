@@ -54,7 +54,7 @@
   .marquee span::after { content:'✦'; color:var(--accent); }
   @keyframes scroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
 
-  /* AS INTELIGÊNCIAS (NOVA SEÇÃO) */
+  /* AS INTELIGÊNCIAS */
   .ai-section { padding:8rem 5%; background:var(--bg); }
   .ai-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:2rem; margin-top:4rem; }
   .ai-card { background:var(--card); border:1px solid var(--border); padding:3rem 2rem; border-radius:8px; position:relative; transition:0.4s; overflow:hidden; }
@@ -68,7 +68,7 @@
   .ai-features li { font-size:0.85rem; color:var(--text); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem; }
   .ai-features li::before { content:'✓'; color:var(--accent); font-weight:bold; }
 
-  /* PAGAMENTO & PLANO (NOVA SEÇÃO) */
+  /* PAGAMENTO & PLANO */
   .pricing-section { padding:8rem 5%; background:linear-gradient(180deg, var(--bg) 0%, var(--card) 100%); border-top:1px solid var(--border); }
   .pricing-container { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; max-width:1200px; margin:0 auto; }
   .pricing-info h2 { font-size:3rem; }
@@ -85,13 +85,11 @@
   .btn-pix { width:100%; padding:1rem; background:var(--accent); color:#fff; border:none; border-radius:6px; font-family:'Syne', sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:0.3s; }
   .btn-pix:hover { background:#e04400; }
 
-  /* ECO SEÇÃO COM BANNER */
+  /* ECO SEÇÃO */
   .eco-section { padding:8rem 5%; background:linear-gradient(135deg, rgba(34,197,94,0.05), var(--bg)); border-top:1px solid rgba(34,197,94,0.2); border-bottom:1px solid rgba(34,197,94,0.2); position:relative; overflow:hidden;}
-  .eco-section::before { content:''; position:absolute; bottom:-20%; left:-10%; width:500px; height:500px; background:radial-gradient(circle, var(--green-glow) 0%, transparent 70%); border-radius:50%; z-index:-1;}
   .eco-container { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
   .eco-badge { display:inline-block; background:rgba(34,197,94,0.1); color:var(--green); padding:0.5rem 1rem; border-radius:50px; font-size:0.8rem; font-weight:bold; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem; border:1px solid rgba(34,197,94,0.3); }
   .eco-image-sim { width:100%; height:300px; background:linear-gradient(45deg, #0f2e1b, #1a4d2e); border-radius:12px; border:1px solid rgba(34,197,94,0.3); display:flex; align-items:center; justify-content:center; font-size:5rem; position:relative; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.5);}
-  .eco-image-sim::after { content:''; position:absolute; inset:0; background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.1"/></svg>'); mix-blend-mode: overlay; pointer-events:none;}
 
   /* AUTH SECTION */
   .auth-section { padding:8rem 5%; background:var(--bg); }
@@ -108,34 +106,19 @@
   .btn-register { background:transparent; border:1px solid var(--border); color:var(--text); }
   .btn-register:hover { background:rgba(255,255,255,0.05); transform:translateY(-2px); }
 
-  /* FOOTER & TRUST BADGES */
-  footer { background:var(--card); border-top:1px solid var(--border); padding:5rem 5% 2rem; }
-  .footer-top { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:4rem; margin-bottom:4rem; }
-  .footer-col h4 { font-family:'Syne', sans-serif; font-size:1.2rem; margin-bottom:1.5rem; color:var(--text); }
-  .footer-col p { color:var(--muted); font-size:0.9rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; }
-  .footer-col a { color:var(--muted); text-decoration:none; transition:0.3s; }
-  .footer-col a:hover { color:var(--accent); }
-  
-  .trust-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; padding-top:2rem; border-top:1px solid var(--border); }
-  .payment-methods { display:flex; gap:1rem; align-items:center; }
-  .payment-methods img { height:24px; filter:grayscale(1) opacity(0.5); transition:0.3s; }
-  .payment-methods img:hover { filter:grayscale(0) opacity(1); }
-  .official-seals { display:flex; gap:2rem; align-items:center; }
-  .official-seals img { height:35px; opacity:0.6; transition:0.3s; }
-  .official-seals img:hover { opacity:1; }
-  .copyright { width:100%; text-align:center; font-size:0.8rem; color:var(--muted); margin-top:2rem; }
-
   /* NOTIFICAÇÕES TOAST */
   .toast { position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#000; padding:1rem 2rem; border-radius:6px; font-weight:700; z-index:9999; transform:translateY(150%); opacity:0; transition:all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow:0 10px 30px rgba(0,0,0,0.5); }
   .toast.show { transform:translateY(0); opacity:1; }
   .toast.error { background:#ef4444; color:#fff; }
 
+  footer { background:var(--card); border-top:1px solid var(--border); padding:5rem 5% 2rem; text-align: center;}
+  .trust-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; padding-top:2rem; border-top:1px solid var(--border); margin-top: 3rem;}
+  .payment-methods img { height:24px; filter:grayscale(1) opacity(0.5); margin: 0 10px;}
+  
   @media(max-width: 768px) {
     .pricing-container, .eco-container, .auth-grid { grid-template-columns:1fr; }
     nav ul { display:none; }
     .hero h1 { font-size: 3rem; }
-    .hero-stats { flex-direction:column; gap:1.5rem; }
-    .trust-bar { flex-direction:column; justify-content:center; }
   }
 </style>
 </head>
@@ -156,78 +139,43 @@
 <section class="hero">
   <span class="section-label">O Futuro do Marketing Digital</span>
   <h1>A inteligência que escala o seu <em>negócio</em>.</h1>
-  <p>Deixe que nossas IAs autônomas gerenciem seu tráfego, criem suas páginas e otimizem suas vendas 24 horas por dia. Você foca na estratégia, a SmartDescAi executa.</p>
+  <p>Deixe que nossas IAs autônomas gerenciem seu tráfego, criem suas páginas e otimizem suas vendas 24 horas por dia.</p>
   
   <div class="hero-stats">
-    <div class="stat">
-      <h4>98<span>%</span></h4>
-      <p>Precisão em Copywriting</p>
-    </div>
-    <div class="stat">
-      <h4>24<span>/7</span></h4>
-      <p>Otimização de Anúncios</p>
-    </div>
-    <div class="stat">
-      <h4>-40<span>%</span></h4>
-      <p>Custo por Aquisição (CPA)</p>
-    </div>
+    <div class="stat"><h4>98<span>%</span></h4><p>Precisão</p></div>
+    <div class="stat"><h4>24<span>/7</span></h4><p>Otimização</p></div>
+    <div class="stat"><h4>-40<span>%</span></h4><p>CPA</p></div>
   </div>
 </section>
 
 <div class="marquee-wrap">
   <div class="marquee">
-    <span>Criação de Landing Pages</span>
-    <span>Gestão de Tráfego Automática</span>
-    <span>Copywriting com IA</span>
-    <span>Análise de Concorrência</span>
-    <span>Relatórios em Tempo Real</span>
-    <span>Criação de Landing Pages</span>
-    <span>Gestão de Tráfego Automática</span>
-    <span>Copywriting com IA</span>
-    <span>Análise de Concorrência</span>
-    <span>Relatórios em Tempo Real</span>
+    <span>Criação de Landing Pages</span><span>Gestão de Tráfego Automática</span><span>Copywriting com IA</span><span>Análise de Concorrência</span>
+    <span>Criação de Landing Pages</span><span>Gestão de Tráfego Automática</span><span>Copywriting com IA</span><span>Análise de Concorrência</span>
   </div>
 </div>
 
 <section id="tecnologia" class="ai-section">
   <div style="text-align:center; max-width:800px; margin:0 auto">
     <span class="section-label">A Força de Trabalho Digital</span>
-    <h2>Conheça sua nova equipe de alta performance</h2>
-    <p style="color:var(--muted)">Nós não usamos apenas algoritmos comuns. A SmartDescAi é movida por três núcleos autônomos de Inteligência Artificial, cada um especialista em fazer sua empresa lucrar e impactar.</p>
+    <h2>Núcleos de Inteligência Ativos</h2>
   </div>
 
   <div class="ai-grid">
     <div class="ai-card">
       <div class="ai-icon">🎯</div>
-      <h3 class="syne">Orion - O Estrategista</h3>
-      <p>Orion é conectado diretamente às APIs do Google Ads e Meta Ads. Ele não dorme. Analisa o comportamento do usuário e ajusta o lance das suas campanhas em tempo real para o menor custo possível.</p>
-      <ul class="ai-features">
-        <li>Gestão de Orçamento Dinâmica</li>
-        <li>Bloqueio de cliques inválidos</li>
-        <li>Testes A/B automatizados (Imagens/Vídeos)</li>
-      </ul>
+      <h3 class="syne">Orion</h3>
+      <p>Gestão de tráfego e lances automáticos.</p>
     </div>
-
     <div class="ai-card">
       <div class="ai-icon">✍️</div>
-      <h3 class="syne">Lyra - A Copywriter</h3>
-      <p>Esqueça o bloqueio criativo. A Lyra estuda o seu nicho, analisa a dor do seu cliente e escreve textos altamente persuasivos para suas Landing Pages, E-mails e descrições de produtos.</p>
-      <ul class="ai-features">
-        <li>Gatilhos mentais adaptativos</li>
-        <li>SEO On-Page estruturado</li>
-        <li>Criação de títulos virais</li>
-      </ul>
+      <h3 class="syne">Lyra</h3>
+      <p>Escrita persuasiva e títulos virais.</p>
     </div>
-
     <div class="ai-card">
       <div class="ai-icon">🌱</div>
-      <h3 class="syne">Gaia - A Gestora Eco</h3>
-      <p>Gaia é a IA responsável pela nossa transparência. Ela rastreia cada pagamento e calcula automaticamente a conversão de 20% do lucro em cotas de plantio de árvores registradas.</p>
-      <ul class="ai-features">
-        <li>Rastreio de impacto por cliente</li>
-        <li>Certificação de plantio em Blockchain</li>
-        <li>Relatório de pegada de carbono zerada</li>
-      </ul>
+      <h3 class="syne">Gaia</h3>
+      <p>Monitoramento de impacto ambiental.</p>
     </div>
   </div>
 </section>
@@ -236,108 +184,53 @@
   <div class="pricing-container">
     <div class="pricing-info">
       <span class="section-label">Acesso Desbloqueado</span>
-      <h2>Autonomia I.A. Completa</h2>
-      <p style="color:var(--muted); margin-bottom:1rem; font-size:1.1rem;">Liberte-se das tarefas manuais. Contrate a assinatura que coloca as inteligências Orion, Lyra e Gaia para trabalharem para o seu domínio.</p>
-      
+      <h2>Autonomia I.A.</h2>
       <div class="price-tag">
-        <span class="currency">R$</span>
-        <span class="amount">49,90</span>
-        <span class="period">/mês</span>
+        <span class="currency">R$</span><span class="amount">49,90</span><span class="period">/mês</span>
       </div>
-
-      <ul class="ai-features" style="margin-bottom:2rem; gap:1rem; display:flex; flex-direction:column;">
-        <li>Acesso integral ao Dashboard SmartDescAi</li>
-        <li>Criação ilimitada de Copies com a I.A Lyra</li>
-        <li>Integração de campanhas via Orion</li>
-        <li>Certificado ambiental emitido pela Gaia</li>
-        <li>Suporte dedicado via WhatsApp</li>
-      </ul>
     </div>
 
     <div class="pix-box">
-      <h3>Pagamento Instantâneo via PIX</h3>
-      <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.5rem;">Liberação automática do painel após a confirmação.</p>
-      
+      <h3>Assinar via PIX</h3>
       <div id="qrcode"></div>
-      
-      <p style="font-size:0.9rem; font-weight:bold; margin-bottom:0.5rem">Chave Celular: +55 (41) 99968-9107</p>
-      <p style="font-size:0.75rem; color:var(--muted); margin-bottom:1.5rem">Titular: Thiago Caboski</p>
-
       <div class="pix-payload-container">
         <div class="pix-payload" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
       </div>
-
       <button class="btn-pix" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
     </div>
   </div>
 </section>
 
-<section id="eco" class="eco-section">
-  <div class="eco-container">
-    <div>
-      <div class="eco-badge">Compromisso SmartDescAi</div>
-      <h2>Tecnologia que <span style="color:var(--green)">Respira</span></h2>
-      <p style="color:var(--muted); font-size:1.1rem; margin-bottom:2rem;">
-        O crescimento do seu negócio não precisa custar o futuro do planeta. Nós somos a primeira agência de I.A que devolve vida à Terra.
-      </p>
-      <p style="color:var(--muted); margin-bottom:2rem;">
-        Exatamente <strong>20% de cada mensalidade ou serviço</strong> contratado é convertido diretamente no plantio de árvores nativas em áreas de desmatamento no Brasil. A IA Gaia monitora os fundos e gera seu certificado de impacto no painel.
-      </p>
-      <div style="display:flex; gap:2rem;">
-        <div>
-          <h4 class="syne" style="font-size:2rem; color:var(--green)">1.200+</h4>
-          <p style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Árvores Plantadas</p>
-        </div>
-        <div>
-          <h4 class="syne" style="font-size:2rem; color:var(--green)">20%</h4>
-          <p style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Lucro Destinado</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="eco-image-sim">
-      🌲🌱🌳
-    </div>
-  </div>
-</section>
-
 <section id="auth" class="auth-section">
-  <div style="text-align:center; margin-bottom:4rem;">
-    <span class="section-label">Área Restrita</span>
-    <h2>Acesse seu Command Center</h2>
-  </div>
-
   <div class="auth-grid">
     <div class="auth-card primary">
-      <h3 class="syne" style="margin-bottom:0.5rem; font-size:1.8rem">Login</h3>
-      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Acesse o dashboard das suas IAs.</p>
+      <h3 class="syne">Login</h3>
       <form id="loginForm">
         <div class="input-group">
-          <label>E-mail corporativo</label>
-          <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+          <label>E-mail</label>
+          <input type="email" id="loginEmail" required>
         </div>
         <div class="input-group">
-          <label>Senha de acesso</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required>
+          <label>Senha</label>
+          <input type="password" id="loginPassword" required>
         </div>
         <button type="submit" class="btn-auth btn-login">ENTRAR NO SISTEMA</button>
       </form>
     </div>
 
     <div class="auth-card">
-      <h3 class="syne" style="margin-bottom:0.5rem; font-size:1.8rem">Criar Conta</h3>
-      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Inicie a configuração da sua agência.</p>
+      <h3 class="syne">Criar Conta</h3>
       <form id="registerForm">
         <div class="input-group">
-          <label>Nome Completo</label>
-          <input type="text" id="regName" placeholder="Como quer ser chamado?" required>
+          <label>Nome</label>
+          <input type="text" id="regName" required>
         </div>
         <div class="input-group">
           <label>E-mail</label>
-          <input type="email" id="regEmail" placeholder="seu@email.com" required>
+          <input type="email" id="regEmail" required>
         </div>
         <div class="input-group">
-          <label>Crie uma Senha</label>
+          <label>Senha</label>
           <input type="password" id="regPassword" placeholder="Mínimo 6 dígitos" required>
         </div>
         <button type="submit" class="btn-auth btn-register">FINALIZAR CADASTRO</button>
@@ -347,69 +240,36 @@
 </section>
 
 <footer>
-  <div class="footer-top">
-    <div class="footer-col">
-      <a href="#" class="logo syne" style="margin-bottom:1rem">Smart<span>DescAi</span></a>
-      <p>Inteligência artificial aplicada ao marketing digital e conversão em massa.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Contato Direto</h4>
-      <p>✉ <a href="mailto:thiagocaboski28@gmail.com">thiagocaboski28@gmail.com</a></p>
-      <p>📱 <a href="https://wa.me/5541999689107" target="_blank">(41) 99968-9107</a></p>
-      <p>📍 Paraná, Brasil</p>
-    </div>
-    <div class="footer-col">
-      <h4>Links Úteis</h4>
-      <p><a href="#tecnologia">Como Funciona</a></p>
-      <p><a href="#planos">Assinatura IA</a></p>
-      <p><a href="#eco">Relatório Ambiental</a></p>
-    </div>
-  </div>
-
+  <p>SmartDescAi © 2026. Todos os direitos reservados.</p>
   <div class="trust-bar">
     <div class="payment-methods">
-      <span style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; margin-right:10px">Pagamento Seguro:</span>
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo%E2%80%94Pix.svg" alt="Pix">
     </div>
-
-    <div class="official-seals">
-      <img src="https://registro.br/img/registrobr-logo.svg" alt="Registro.br Oficial">
-      <div style="display:flex; align-items:center; gap:5px; border:1px solid var(--border); padding:5px 10px; border-radius:4px; opacity:0.7">
-        <img src="https://www.gstatic.com/images/branding/googlelogo/2x/google_logo_light_color_92x30dp.png" alt="Google" style="height:20px; opacity:1">
-        <span style="font-size:0.7rem; font-weight:bold; color:#fff">Ads API</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="copyright">
-    SmartDescAi © 2026. Todos os direitos reservados. Projeto operando com Supabase Auth & PostgreSQL.
   </div>
 </footer>
 
 <script>
   // ==========================================
-  // CONFIGURAÇÃO DE INFRAESTRUTURA SUPABASE
+  // CONFIGURAÇÃO SUPABASE
   // ==========================================
   const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co'; 
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bXN5c3p3bnprbXhvYnZ1b21wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzNjAsImV4cCI6MjA5MTkxOTM2MH0.xpk9Mv9XdsR9iWq9nMb1aTb2ExmGdwNKkc95nF5ytIg';
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ==========================================
-  // SISTEMA DE NOTIFICAÇÕES (TOAST)
+  // SISTEMA DE NOTIFICAÇÕES
   // ==========================================
   function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
-    if (!t) return; // Segurança caso o elemento não exista
+    if (!t) return;
     t.textContent = msg;
     t.className = isError ? 'toast show error' : 'toast show';
     setTimeout(() => t.classList.remove('show'), 3500);
   }
 
   // ==========================================
-  // LÓGICA DE CADASTRO COM FEEDBACKS
+  // LÓGICA DE CADASTRO (CORRIGIDA)
   // ==========================================
   document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -427,26 +287,22 @@
           options: { data: { full_name: name } }
       });
       
-    if (error) {
-          console.error("Erro detalhado do Supabase:", error); // Isso mostra tudo no F12
+      if (error) {
+          console.error("Erro Supabase:", error);
           let msg = error.message;
-          
           if (msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
-          if (msg.includes("Signup is disabled")) msg = "O cadastro está desativado no painel do Supabase.";
-          
           showToast(msg, true);
           btn.disabled = false;
           btn.textContent = 'FINALIZAR CADASTRO';
-      }
       } else {
-          showToast("✓ Cadastro I.A ativado! Confirme seu e-mail.");
+          showToast("✓ Cadastro realizado! Verifique seu e-mail.");
           e.target.reset();
           btn.textContent = 'CONTA CRIADA';
       }
   });
 
   // ==========================================
-  // LÓGICA DE LOGIN COM FEEDBACKS DE SENHA/EMAIL
+  // LÓGICA DE LOGIN
   // ==========================================
   document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -455,7 +311,7 @@
       const password = document.getElementById('loginPassword').value;
 
       btn.disabled = true;
-      btn.textContent = 'CONECTANDO AOS NÚCLEOS...';
+      btn.textContent = 'CONECTANDO...';
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({
           email: email,
@@ -463,44 +319,24 @@
       });
 
       if (error) {
-          let errorMsg = "Acesso Negado";
-          
-          // Detecta erro de senha ou usuário inexistente
-          if (error.message.includes("Invalid login credentials")) {
-              errorMsg = "E-mail ou senha incorretos.";
-          } else if (error.message.includes("Email not confirmed")) {
-              errorMsg = "Por favor, confirme seu e-mail no seu Gerenciador.";
-          } else {
-              errorMsg = error.message;
-          }
-
+          let errorMsg = error.message.includes("Invalid login credentials") ? "E-mail ou senha incorretos." : error.message;
           showToast(errorMsg, true);
           btn.disabled = false;
           btn.textContent = 'ENTRAR NO SISTEMA';
       } else {
-          showToast("✓ Autenticado. Preparando Dashboard...");
-          btn.textContent = 'CONECTADO';
-          
-          // Redireciona após o feedback visual
-          setTimeout(() => { 
-              window.location.href = '#dashboard'; 
-          }, 1500);
+          showToast("✓ Bem-vindo de volta!");
+          setTimeout(() => { window.location.href = '#dashboard'; }, 1500);
       }
   });
 
   // ==========================================
-  // GERAÇÃO DO QR CODE PIX (FUNÇÃO AUXILIAR)
+  // PIX E QR CODE (CORRIGIDA)
   // ==========================================
   window.addEventListener('load', () => {
     const payloadElem = document.getElementById("pixPayload");
     const qrElem = document.getElementById("qrcode");
-    
     if (payloadElem && qrElem) {
-      new QRCode(qrElem, {
-        text: payloadElem.textContent,
-        width: 160,
-        height: 160
-      });
+      new QRCode(qrElem, { text: payloadElem.textContent, width: 160, height: 160 });
     }
   });
 
@@ -509,7 +345,7 @@
     navigator.clipboard.writeText(payload).then(() => {
       showToast("✓ Código Copiado!");
     });
-  }
+  } // <--- Faltava fechar essa função!
 </script>
 
 </body>
