@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCore - Dashboard I.A</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --bg: #0a0b10;
+            --card: #161b22;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar Moderna */
+        nav {
+            width: 250px;
+            height: 100vh;
+            background: var(--card);
+            border-right: 1px solid #30363d;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .logo { font-weight: bold; color: var(--primary); font-size: 1.5rem; margin-bottom: 30px; }
+
+        .nav-link {
+            padding: 15px;
+            display: block;
+            color: #8b949e;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #21262d;
+            color: var(--primary);
+        }
+
+        /* Área Principal */
+        main {
+            margin-left: 270px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .grid-ia {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card-ia {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            transition: transform 0.3s;
+        }
+
+        .card-ia:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .btn-ia {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">SMART_CORE</div>
+        <a href="#" class="nav-link active"><i class="fas fa-home"></i> Início</a>
+        <a href="#" class="nav-link"><i class="fas fa-robot"></i> Gerador SmartDesc</a>
+        <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Tráfego I.A</a>
+        <a href="#" class="nav-link"><i class="fas fa-sign-out-alt" onclick="logout()"></i> Sair</a>
+    </nav>
+
+    <main>
+        <h1>Bem-vindo, <span id="userName">...</span></h1>
+        <p style="color: #8b949e;">Selecione o módulo de inteligência para o seu marketing:</p>
+
+        <div class="grid-ia">
+            <div class="card-ia">
+                <h3><i class="fas fa-edit"></i> SmartDesc I.A</h3>
+                <p>Crie descrições matadoras para Mercado Livre e Shopee em segundos.</p>
+                <button class="btn-ia">ACESSAR</button>
+            </div>
+
+            <div class="card-ia">
+                <h3><i class="fas fa-bullhorn"></i> Copy Ads</h3>
+                <p>Gere textos de alta conversão para Facebook e Instagram Ads.</p>
+                <button class="btn-ia">ACESSAR</button>
+            </div>
+
+            <div class="card-ia">
+                <h3><i class="fas fa-search-dollar"></i> Trend Scanner</h3>
+                <p>Analise o que a concorrência está vendendo e quais os nichos quentes.</p>
+                <button class="btn-ia">EM BREVE</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configuração Supabase (Mantenha as suas mesmas chaves)
+        const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co';
+        const SUPABASE_ANON_KEY = 'SUA_KEY_AQUI'; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Proteção de Rota: Se não tiver logado, volta pro index
+        async function checkUser() {
+            const { data: { user }, error } = await supabaseClient.auth.getUser();
+            if (!user || error) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('userName').textContent = user.user_metadata.full_name || user.email;
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        checkUser();
+    </script>
+</body>
+</html>
