@@ -15,9 +15,7 @@
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
-  .cursor{width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-  .cursor-ring{width:36px;height:36px;border:1px solid rgba(255,77,0,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform 0.35s ease;transform:translate(-50%,-50%)}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
 
   /* ECO BANNER */
   .eco-banner{background:linear-gradient(90deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05));border-bottom:1px solid rgba(34,197,94,0.2);padding:0.6rem 5%;display:flex;align-items:center;justify-content:center;gap:0.6rem;font-size:0.8rem;color:#86efac}
@@ -31,274 +29,189 @@
   nav ul a{color:var(--muted);text-decoration:none;font-size:0.82rem;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.2s}
   nav ul a:hover{color:var(--text)}
   .nav-cta{background:var(--accent)!important;color:#fff!important;padding:0.5rem 1.1rem;border-radius:2px}
-  .nav-login{border:1px solid var(--border);padding:0.5rem 1rem;border-radius:2px}
 
   /* HERO */
   .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 5% 5rem;position:relative;overflow:hidden}
   .hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4}
-  .glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,0,0.12) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;animation:pulse 6s ease-in-out infinite}
-  .glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,184,0,0.08) 0%,transparent 70%);bottom:50px;left:5%;pointer-events:none;animation:pulse 8s ease-in-out infinite reverse}
-  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:0.7}}
-  .tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,77,0,0.1);border:1px solid rgba(255,77,0,0.3);color:var(--accent);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 0.8rem;border-radius:2px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.6s 0.2s forwards}
-  .tag::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.5s infinite}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3rem,8vw,7.5rem);line-height:0.95;letter-spacing:-0.04em;max-width:900px;opacity:0;animation:fadeUp 0.7s 0.4s forwards}
+  .glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,0,0.12) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+  
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3rem,8vw,7.5rem);line-height:0.95;letter-spacing:-0.04em;max-width:900px}
   h1 em{font-style:normal;-webkit-text-stroke:1px var(--accent);color:transparent}
-  .hero-sub{margin-top:2rem;font-size:1.1rem;line-height:1.7;color:var(--muted);max-width:480px;opacity:0;animation:fadeUp 0.7s 0.6s forwards}
-  .hero-actions{display:flex;gap:1rem;margin-top:3rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s 0.8s forwards}
-  .hero-stats{display:flex;gap:3rem;margin-top:5rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s 1s forwards;padding-top:3rem;border-top:1px solid var(--border)}
-  .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1}
-  .stat-num span{color:var(--accent)}
-  .stat-label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-  /* BUTTONS */
-  .btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:400;text-decoration:none;cursor:none;transition:all 0.2s;border:none}
-  .btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}
-  .btn-primary:hover{background:#e04400;transform:translateY(-2px)}
-  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-  .btn-ghost:hover{border-color:rgba(255,255,255,0.3);transform:translateY(-2px)}
-  .btn-green{background:var(--green);color:#000;border:1px solid var(--green)}
-  .btn-green:hover{background:#16a34a;transform:translateY(-2px)}
-
-  /* MARQUEE */
-  .marquee-wrap{overflow:hidden;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,77,0,0.03)}
-  .marquee{display:flex;gap:3rem;width:max-content;animation:scroll 20s linear infinite}
-  .marquee-item{white-space:nowrap;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:1.5rem}
-  .marquee-item::after{content:'✦';color:var(--accent);font-size:0.6rem}
-  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .hero-sub{margin-top:2rem;font-size:1.1rem;line-height:1.7;color:var(--muted);max-width:480px}
 
   /* SECTIONS */
   section{padding:7rem 5%}
   .section-label{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
-  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-0.03em;max-width:600px}
-
-  /* SERVICES */
-  .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;margin-top:4rem;background:var(--border);border:1px solid var(--border)}
-  .service-card{background:var(--bg);padding:2.5rem;transition:background 0.3s;position:relative;overflow:hidden}
-  .service-card:hover{background:var(--card)}
-  .service-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
-  .service-card:hover::after{transform:scaleX(1)}
-  .service-icon{width:44px;height:44px;background:rgba(255,77,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-size:1.2rem}
-  .service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:0.8rem}
-  .service-card p{color:var(--muted);font-size:0.9rem;line-height:1.7}
-
-  /* RESULTS */
-  .results{background:var(--card)}
-  .results-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-  .result-items{display:flex;flex-direction:column;gap:1.5rem;margin-top:3rem}
-  .result-item{display:flex;flex-direction:column;gap:0.3rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
-  .result-bar-wrap{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:0.5rem}
-  .result-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(0.16,1,0.3,1)}
-  .result-bar.animate{transform:scaleX(1)}
-  .result-top{display:flex;justify-content:space-between;align-items:center}
-  .result-name{font-size:0.85rem}
-  .result-pct{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--accent)}
-
-  /* ECO SECTION */
-  .eco-section{background:linear-gradient(135deg,rgba(34,197,94,0.06),rgba(5,5,10,0));border-top:1px solid rgba(34,197,94,0.15);border-bottom:1px solid rgba(34,197,94,0.15)}
-  .eco-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-  .eco-badge{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86efac;padding:0.4rem 1rem;border-radius:2px;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem}
-  .eco-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
-  .eco-stat{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);padding:1.5rem;border-radius:4px}
-  .eco-stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--green)}
-  .eco-stat-label{font-size:0.8rem;color:var(--muted);margin-top:0.3rem}
-
-  /* PIX */
-  .pix-section{background:var(--card)}
-  .pix-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-  .pix-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
-  .pix-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#00bdae;letter-spacing:-0.02em}
-  #qrcode{background:#fff;padding:12px;border-radius:6px}
-  #qrcode canvas,#qrcode img{display:block}
-  .pix-key-info{text-align:center}
-  .pix-key-info p{font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem}
-  .pix-key-info strong{color:#00bdae;font-size:1.05rem;font-family:'Syne',sans-serif}
-  .pix-code-box{background:rgba(0,189,174,0.05);border:1px solid rgba(0,189,174,0.2);border-radius:4px;padding:0.8rem 1rem;font-size:0.68rem;color:var(--muted);word-break:break-all;text-align:center;max-width:280px;user-select:all}
-  .pix-copy-btn{background:rgba(0,189,174,0.1);border:1px solid rgba(0,189,174,0.3);color:#00bdae;padding:0.6rem 1.5rem;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:none;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem}
-  .pix-copy-btn:hover{background:rgba(0,189,174,0.2);transform:translateY(-2px)}
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;letter-spacing:-0.03em}
 
   /* AUTH */
-  .auth-section{padding:7rem 5%}
   .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:4rem;max-width:900px;margin-left:auto;margin-right:auto}
   .auth-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2.5rem}
   .auth-card.highlighted{border-top:2px solid var(--accent)}
-  .auth-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:0.5rem}
-  .auth-sub{color:var(--muted);font-size:0.85rem;margin-bottom:2rem}
   .field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.2rem}
-  .field label{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
-  .field input{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;cursor:text}
-  .field input:focus{border-color:rgba(255,77,0,0.5);background:rgba(255,77,0,0.03)}
-  .auth-submit{width:100%;padding:0.85rem;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;cursor:none;transition:all 0.2s;margin-top:0.5rem}
-  .auth-login-btn{background:var(--accent);color:#fff;border:none}
-  .auth-login-btn:hover{background:#e04400;transform:translateY(-2px)}
+  .field label{font-size:0.78rem;color:var(--muted);text-transform:uppercase}
+  .field input{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:0.75rem 1rem;color:#fff;outline:none}
+  .auth-submit{width:100%;padding:0.85rem;border-radius:4px;font-weight:700;cursor:pointer;border:none}
+  .auth-login-btn{background:var(--accent);color:#fff}
   .auth-register-btn{background:transparent;color:var(--text);border:1px solid var(--border)}
-  .auth-register-btn:hover{background:rgba(255,255,255,0.04);transform:translateY(-2px)}
 
-  /* CTA */
-  .cta-section{text-align:center;background:linear-gradient(135deg,rgba(255,77,0,0.08),rgba(255,184,0,0.05));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  /* PIX CARD */
+  .pix-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:2.5rem;text-align:center}
+  #qrcode{background:#fff;padding:12px;display:inline-block;border-radius:6px;margin:1.5rem 0}
+  .pix-code-box{background:rgba(0,189,174,0.05);border:1px solid rgba(0,189,174,0.2);padding:0.8rem;font-size:0.65rem;word-break:break-all;margin-bottom:1rem}
+
+  /* FOOTER & LOGOS */
+  .contact-section{text-align:center;padding:5rem 5%;border-top:1px solid var(--border)}
   .contact-info{display:flex;gap:2rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
-  .contact-item{display:flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.85rem}
-  .contact-item a{color:var(--muted);text-decoration:none;transition:color 0.2s}
-  .contact-item a:hover{color:var(--text)}
+  .contact-item{display:flex;align-items:center;gap:0.5rem;color:var(--text);font-weight:500}
+  .contact-item a{color:var(--accent);text-decoration:none}
 
-  /* FOOTER */
-  footer{padding:3rem 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-  footer p{color:var(--muted);font-size:0.8rem}
-  .footer-links{display:flex;gap:2rem}
-  .footer-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;transition:color 0.2s}
-  .footer-links a:hover{color:var(--text)}
-  .footer-eco{color:#86efac;font-size:0.78rem}
+  .footer-trust{display:flex;flex-direction:column;align-items:center;gap:2rem;padding:3rem 5%;border-top:1px solid var(--border);background:rgba(255,255,255,0.01)}
+  .payment-flags img{height:25px;filter:grayscale(1) opacity(0.6);transition:0.3s}
+  .payment-flags img:hover{filter:grayscale(0) opacity(1)}
+  .trust-logos{display:flex;gap:3rem;align-items:center;flex-wrap:wrap;justify-content:center}
+  .trust-logos img{height:40px;opacity:0.5;transition:0.3s}
+  .trust-logos img:hover{opacity:1}
 
-  /* TOAST */
-  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#000;padding:0.8rem 1.5rem;border-radius:4px;font-size:0.85rem;font-weight:500;z-index:9000;transform:translateY(100px);opacity:0;transition:all 0.3s}
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#000;padding:0.8rem 1.5rem;border-radius:4px;z-index:9999;transform:translateY(100px);opacity:0;transition:0.3s}
   .toast.show{transform:translateY(0);opacity:1}
 
-  @media(max-width:768px){
-    .results-inner,.eco-inner,.pix-inner,.auth-grid{grid-template-columns:1fr;gap:3rem}
-    nav ul{display:none}
-  }
+  @media(max-width:768px){ .auth-grid{grid-template-columns:1fr} nav ul{display:none} }
 </style>
 </head>
 <body>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="toast" id="toast">✓ Código PIX copiado!</div>
+
+<div class="toast" id="toast">✓ Sucesso!</div>
 
 <div class="eco-banner">
-  🌳 <strong>20% de cada serviço</strong>&nbsp;é destinado ao plantio de árvores. <a href="eco.html" style="color:#86efac;">Saiba mais</a>.
+  🌳 <strong>20% de cada serviço</strong>&nbsp;é destinado ao plantio de árvores.
 </div>
 
 <nav>
   <div class="logo">Smart<span>DescAi</span></div>
   <ul>
     <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#resultados">Resultados</a></li>
-    <li><a href="eco.html">🌳 Eco</a></li>
-    <li><a href="#pagamento">PIX</a></li>
-    <li><a href="#auth" class="nav-login">Entrar</a></li>
-    <li><a href="#contato" class="nav-cta">Começar →</a></li>
+    <li><a href="#pagamento">Pagamento</a></li>
+    <li><a href="#auth">Entrar</a></li>
+    <li><a href="#contato" class="nav-cta">Contato →</a></li>
   </ul>
 </nav>
 
 <section class="hero">
-  <div class="hero-noise"></div><div class="glow"></div><div class="glow2"></div>
-  <div class="tag">Agência de Marketing Digital</div>
+  <div class="hero-noise"></div>
+  <div class="tag">Marketing Digital & Performance</div>
   <h1>Crescimento<br>que você<br><em>sente</em></h1>
-  <p class="hero-sub">Transformamos marcas em autoridades digitais. Estratégias de tráfego pago, conteúdo e conversão que geram resultado real.</p>
-  <div class="hero-actions">
-    <a href="#contato" class="btn btn-primary">Quero crescer agora</a>
-    <a href="#resultados" class="btn btn-ghost">Ver resultados</a>
-  </div>
-  <div class="hero-stats">
-    <div><div class="stat-num">+320<span>%</span></div><div class="stat-label">Aumento em leads</div></div>
-    <div><div class="stat-num">180<span>+</span></div><div class="stat-label">Clientes atendidos</div></div>
-    <div><div class="stat-num">R$12<span>M</span></div><div class="stat-label">Investido</div></div>
-  </div>
-</section>
-
-<div class="marquee-wrap"><div class="marquee">
-  <span class="marquee-item">Google Ads</span><span class="marquee-item">Meta Ads</span><span class="marquee-item">SEO Orgânico</span><span class="marquee-item">E-mail Marketing</span><span class="marquee-item">Gestão de Redes Sociais</span><span class="marquee-item">Criação de Conteúdo</span><span class="marquee-item">Landing Pages</span><span class="marquee-item">CRO</span><span class="marquee-item">Funil de Vendas</span><span class="marquee-item">Branding</span>
-  <span class="marquee-item">Google Ads</span><span class="marquee-item">Meta Ads</span><span class="marquee-item">SEO Orgânico</span><span class="marquee-item">E-mail Marketing</span><span class="marquee-item">Gestão de Redes Sociais</span><span class="marquee-item">Criação de Conteúdo</span><span class="marquee-item">Landing Pages</span><span class="marquee-item">CRO</span><span class="marquee-item">Funil de Vendas</span><span class="marquee-item">Branding</span>
-</div></div>
-
-<section id="servicos">
-  <div class="section-label">O que fazemos</div>
-  <h2>Serviços que impulsionam sua marca</h2>
-  <div class="services-grid">
-    <div class="service-card"><div class="service-icon">🎯</div><h3>Tráfego Pago</h3><p>Campanhas estratégicas no Google e Meta Ads.</p></div>
-    <div class="service-card"><div class="service-icon">🚀</div><h3>Landing Pages</h3><p>Páginas de alta conversão para seu negócio.</p></div>
-    <div class="service-card"><div class="service-icon">📊</div><h3>Analytics</h3><p>Dados reais para decisões inteligentes.</p></div>
-  </div>
-</section>
-
-<section id="eco" class="eco-section">
-  <div class="eco-inner">
-    <div>
-      <div style="font-size:5rem;margin-bottom:1.5rem;">🌳</div>
-      <div class="eco-badge">🌱 Compromisso Ambiental</div>
-      <h2 style="color:#86efac;">20% vai para o planeta</h2>
-      <p style="color:var(--muted);line-height:1.8;margin-top:1.5rem">Cada cliente que cresce conosco ajuda a reflorestar o Brasil.</p>
-      <div style="margin-top:2rem"><a href="eco.html" class="btn btn-green">Crescer com propósito →</a></div>
-    </div>
-    <div>
-      <div class="eco-stats">
-        <div class="eco-stat"><div class="eco-stat-num">1.200+</div><div class="eco-stat-label">Árvores plantadas</div></div>
-        <div class="eco-stat"><div class="eco-stat-num">20%</div><div class="eco-stat-label">De cada serviço</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="pagamento" class="pix-section">
-  <div class="pix-inner">
-    <div>
-      <div class="section-label">Pagamento facilitado</div>
-      <h2>Pague com PIX</h2>
-      <p style="color:var(--muted);margin-top:1.5rem;line-height:1.8;">Escaneie o QR Code ou copie o código Copia e Cola abaixo.</p>
-    </div>
-    <div style="display:flex;justify-content:center">
-      <div class="pix-card">
-        <div class="pix-logo">PIX ✦</div>
-        <div id="qrcode"></div>
-        <div class="pix-key-info">
-          <p>Chave PIX — Telefone</p>
-          <strong>+55 (41) 99968-9107</strong>
-        </div>
-        <div class="pix-code-box" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
-        
-        <button class="pix-copy-btn" onclick="copyPix()">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M3 11V3a1 1 0 0 1 1-1h8"/></svg>
-          Copiar código PIX
-        </button>
-        <p style="font-size:0.72rem;color:var(--muted)">Titular: Thiago Caboski</p>
-      </div>
-    </div>
-  </div>
+  <p class="hero-sub">Estratégias de tráfego pago e conversão para transformar sua marca em autoridade.</p>
 </section>
 
 <section id="auth" class="auth-section">
+  <div class="section-label" style="text-align:center">Acesso ao Painel</div>
   <div class="auth-grid">
     <div class="auth-card highlighted">
-      <h3>Entrar</h3>
-      <p class="auth-sub">Acesse seu painel de resultados.</p>
+      <h3>Login</h3>
       <form id="loginForm">
-        <div class="field">
-          <label>E-mail</label>
-          <input type="email" id="loginEmail" placeholder="seu@email.com" required>
-        </div>
-        <div class="field">
-          <label>Senha</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="auth-submit auth-login-btn">Entrar na Conta</button>
+        <div class="field"><label>E-mail</label><input type="email" id="loginEmail" required></div>
+        <div class="field"><label>Senha</label><input type="password" id="loginPassword" required></div>
+        <button type="submit" class="auth-submit auth-login-btn">ENTRAR</button>
       </form>
     </div>
-
     <div class="auth-card">
-      <h3>Cadastrar</h3>
-      <p class="auth-sub">Comece sua jornada digital hoje.</p>
+      <h3>Cadastro</h3>
       <form id="registerForm">
-        <div class="field">
-          <label>Nome Completo</label>
-          <input type="text" id="regName" placeholder="João Silva" required>
-        </div>
-        <div class="field">
-          <label>E-mail</label>
-          <input type="email" id="regEmail" placeholder="seu@email.com" required>
-        </div>
-        <div class="field">
-          <label>Senha</label>
-          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
-        </div>
-        <button type="submit" class="auth-submit auth-register-btn">Criar Conta Grátis</button>
+        <div class="field"><label>Nome</label><input type="text" id="regName" required></div>
+        <div class="field"><label>E-mail</label><input type="email" id="regEmail" required></div>
+        <div class="field"><label>Senha</label><input type="password" id="regPassword" required></div>
+        <button type="submit" class="auth-submit auth-register-btn">CRIAR CONTA</button>
       </form>
     </div>
   </div>
 </section>
 
-<section id="contato" class="cta-section">
-  <div class="section-label">Pronto para crescer?</div>
-  <h2>Vamos construir algo grande juntos</h2>
+<section id="pagamento">
+  <div style="text-align:center; max-width:600px; margin:0 auto">
+    <div class="section-label">Pagamento Instantâneo</div>
+    <h2>Pague via PIX</h2>
+    <div class="pix-card">
+      <div id="qrcode"></div>
+      <p style="font-size:0.9rem; margin-bottom:1rem"><strong>+55 (41) 99968-9107</strong></p>
+      <div class="pix-code-box" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
+      <button class="auth-submit auth-login-btn" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
+      <p style="font-size:0.7rem; color:var(--muted); margin-top:10px">Titular: Thiago Caboski</p>
+    </div>
+  </div>
+</section>
+
+<section id="contato" class="contact-section">
+  <div class="section-label">Fale Conosco</div>
+  <h2>Pronto para escalar?</h2>
   <div class="contact-info">
-    <div class="contact-item">✉ <a href="mailto:thiagocaboski28
+    <div class="contact-item">✉ E-mail: <a href="mailto:thiagocaboski28@gmail.com">thiagocaboski28@gmail.com</a></div>
+    <div class="contact-item">📱 WhatsApp: <a href="https://wa.me/5541999689107">(41) 99968-9107</a></div>
+  </div>
+</section>
+
+<div class="footer-trust">
+  <div class="payment-flags">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style="margin-left:20px">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style="margin-left:20px">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo%E2%80%94Pix.svg" alt="Pix" style="margin-left:20px">
+  </div>
+  
+  <div class="trust-logos">
+    <img src="https://registro.br/img/registrobr-logo.svg" alt="Registro.br">
+    <img src="https://www.gstatic.com/images/branding/googlelogo/2x/google_logo_light_color_92x30dp.png" alt="Google Partner">
+    <p style="font-size:0.7rem; color:var(--muted)">Site Oficial SmartDescAi ® 2026</p>
+  </div>
+</div>
+
+<script>
+  // CONFIGURAÇÃO SUPABASE
+  const SUPABASE_URL = 'SUA_URL_AQUI'; 
+  const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_AQUI';
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Registro
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: document.getElementById('regEmail').value,
+      password: document.getElementById('regPassword').value,
+      options: { data: { full_name: document.getElementById('regName').value } }
+    });
+    if (error) showToast(error.message); else showToast("Verifique seu e-mail!");
+  });
+
+  // Login
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: document.getElementById('loginEmail').value,
+      password: document.getElementById('loginPassword').value
+    });
+    if (error) showToast(error.message); else showToast("Bem-vindo!");
+  });
+
+  // QR Code
+  window.addEventListener('load', () => {
+    new QRCode(document.getElementById("qrcode"), {
+      text: "00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777",
+      width: 180, height: 180
+    });
+  });
+
+  function copyPix() {
+    navigator.clipboard.writeText(document.getElementById('pixPayload').textContent);
+    showToast("Código Copiado!");
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>
