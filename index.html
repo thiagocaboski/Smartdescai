@@ -427,15 +427,17 @@
           options: { data: { full_name: name } }
       });
       
-      if (error) {
+    if (error) {
+          console.error("Erro detalhado do Supabase:", error); // Isso mostra tudo no F12
           let msg = error.message;
-          // Melhora a leitura dos erros para o usuário
+          
           if (msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
-          if (msg.includes("Password should be")) msg = "A senha precisa de pelo menos 6 caracteres.";
+          if (msg.includes("Signup is disabled")) msg = "O cadastro está desativado no painel do Supabase.";
           
           showToast(msg, true);
           btn.disabled = false;
           btn.textContent = 'FINALIZAR CADASTRO';
+      }
       } else {
           showToast("✓ Cadastro I.A ativado! Confirme seu e-mail.");
           e.target.reset();
