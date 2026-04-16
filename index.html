@@ -389,45 +389,89 @@
   </div>
 </footer>
 
-<script>
-  // ==========================================
+// ==========================================
   // CONFIGURAÇÃO DE INFRAESTRUTURA SUPABASE
   // ==========================================
-  const SUPABASE_URL = 'SUA_URL_AQUI'; 
-  const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_AQUI';
+  const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bXN5c3p3bnprbXhvYnZ1b21wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzNjAsImV4cCI6MjA5MTkxOTM2MH0.xpk9Mv9XdsR9iWq9nMb1aTb2ExmGdwNKkc95nF5ytIg';
+  
+  // Inicialização segura
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ==========================================
-  // SISTEMA DE NOTIFICAÇÕES (TOAST)
-  // ==========================================
-  function showToast(msg, isError = false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = isError ? 'toast show error' : 'toast show';
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
-
-  // ==========================================
-  // LÓGICA DE CADASTRO
+  // LÓGICA DE CADASTRO (COM VALIDAÇÃO DE ERRO)
   // ==========================================
   document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button');
+      const originalText = btn.textContent;
       btn.textContent = 'PROCESSANDO...';
+      btn.disabled = true;
       
-      const { error } = await supabaseClient.auth.signUp({
-          email: document.getElementById('regEmail').value,
-          password: document.getElementById('regPassword').value,
-          options: { data: { full_name: document.getElementById('regName').value } }
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const name = document.getElementById('regName').value;
+
+      const { data, error } = await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: { data: { full_name: name } }
       });
       
       if (error) {
-          showToast(error.message, true);
-          btn.textContent = 'FINALIZAR CADASTRO';
+          // Trata erros comuns de cadastro
+          if (error.status === 422) {
+              showToast("E-mail inválido ou senha muito curta.", true);
+          } else {
+              showToast("Erro no cadastro: " + error.message, true);
+          }
+          btn.textContent = originalText;
+          btn.disabled = false;
       } else {
-          showToast("Cadastro I.A ativado! Confirme seu e-mail.");
-          e.target.reset();
-          btn.textContent = 'CONTA CRIADA';
+          // Verifica se o usuário já existe ou se precisa confirmar e-mail
+          if (data.user && data.user.identities && data.user.identities.length === 0) {
+              showToast("Este e-mail já está cadastrado!", true);
+              btn.textContent = originalText;
+              btn.disabled = false;
+          } else {
+              showToast("✓ Conta criada! Verifique seu e-mail para ativar.");
+              e.target.reset();
+              btn.textContent = 'SUCESSO!';
+          }
+      }
+  });
+
+  // ==========================================
+  // LÓGICA DE LOGIN (VERIFICAÇÃO DE SENHA)
+  // ==========================================
+  document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'CONECTANDO AOS NÚCLEOS...';
+      btn.disabled = true;
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+      });
+
+      if (error) {
+          // Aqui tratamos especificamente o erro de credenciais
+          if (error.message.includes("Invalid login credentials")) {
+              showToast("E-mail ou senha incorretos!", true);
+          } else if (error.message.includes("Email not confirmed")) {
+              showToast("Por favor, confirme seu e-mail primeiro.", true);
+          } else {
+              showToast("Erro: " + error.message, true);
+          }
+          btn.textContent = 'TENTAR NOVAMENTE';
+          btn.disabled = false;
+      } else {
+          showToast("✓ Acesso autorizado! Entrando...");
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
       }
   });
 
