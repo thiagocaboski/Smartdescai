@@ -785,7 +785,7 @@
   // CONFIGURAÇÃO DE INFRAESTRUTURA SUPABASE
   // ==========================================
   const SUPABASE_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co'; 
-  const SUPABASE_ANON_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+  const SUPABASE_ANON_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG'; // Certifique-se que esta chave está correta
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ==========================================
@@ -821,10 +821,7 @@
       if (error) {
           console.error("Erro detalhado do Supabase:", error);
           let msg = error.message;
-          
           if (msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
-          if (msg.includes("Signup is disabled")) msg = "O cadastro está desativado no painel do Supabase.";
-          
           showToast(msg, true);
           btn.disabled = false;
           btn.textContent = 'FINALIZAR CADASTRO';
@@ -836,7 +833,7 @@
   });
 
   // ==========================================
-  // LÓGICA DE LOGIN COM FEEDBACKS DE SENHA/EMAIL
+  // LÓGICA DE LOGIN COM REDIRECIONAMENTO
   // ==========================================
   document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -853,16 +850,7 @@
       });
 
       if (error) {
-          let errorMsg = "Acesso Negado";
-          
-          if (error.message.includes("Invalid login credentials")) {
-              errorMsg = "E-mail ou senha incorretos.";
-          } else if (error.message.includes("Email not confirmed")) {
-              errorMsg = "Por favor, confirme seu e-mail no seu Gerenciador.";
-          } else {
-              errorMsg = error.message;
-          }
-
+          let errorMsg = error.message.includes("Invalid login credentials") ? "E-mail ou senha incorretos." : error.message;
           showToast(errorMsg, true);
           btn.disabled = false;
           btn.textContent = 'ENTRAR NO SISTEMA';
@@ -871,18 +859,18 @@
           btn.textContent = 'CONECTADO';
           
           setTimeout(() => { 
-              window.location.href = '#dashboard'; 
+              // AQUI ESTÁ A MUDANÇA: AGORA VAI PARA O ARQUIVO EXTERNO
+              window.location.href = 'dashboard.html'; 
           }, 1500);
       }
   });
 
   // ==========================================
-  // GERAÇÃO DO QR CODE PIX (FUNÇÃO AUXILIAR)
+  // GERAÇÃO DO QR CODE PIX
   // ==========================================
   window.addEventListener('load', () => {
     const payloadElem = document.getElementById("pixPayload");
     const qrElem = document.getElementById("qrcode");
-    
     if (payloadElem && qrElem) {
       new QRCode(qrElem, {
         text: payloadElem.textContent,
@@ -891,10 +879,11 @@
       });
     }
   });
-function copyPix() {
+
+  function copyPix() {
     const payload = document.getElementById('pixPayload').textContent;
     navigator.clipboard.writeText(payload).then(() => {
       showToast("✓ Código Copiado!");
     });
-  } // <--- CORREÇÃO 2: Adicionada a chave } que faltava para fechar a função
+  }
 </script>
