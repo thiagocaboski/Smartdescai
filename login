@@ -109,11 +109,12 @@
 </section>
 
 <script>
-    // 1. CONFIGURAÇÃO SUPABASE (MUDE APENAS AQUI)
-    const SUPABASE_URL = 'SEU_URL_AQUI'; 
-    const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_AQUI';
+    // 1. CONFIGURAÇÃO SUPABASE
+    const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bXN5c3p3bnprbXhvYnZ1b21wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzNjAsImV4cCI6MjA5MTkxOTM2MH0.xpk9Mv9XdsR9iWq9nMb1aTb2ExmGdwNKkc95nF5ytIg';
     
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Inicialização correta usando o objeto global do CDN
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // 2. LÓGICA DE CADASTRO
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -122,7 +123,7 @@
         const password = document.getElementById('regPassword').value;
         const name = document.getElementById('regName').value;
 
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await _supabase.auth.signUp({
             email,
             password,
             options: { data: { full_name: name } }
@@ -142,13 +143,13 @@
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
 
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
             showNotify(error.message, 'error');
         } else {
             showNotify("Login realizado com sucesso!", 'success');
-            // Redireciona após 1.5s (ex: para dashboard.html)
+            // Redireciona para onde você desejar
             setTimeout(() => { window.location.href = '#'; }, 1500);
         }
     });
