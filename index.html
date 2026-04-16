@@ -893,14 +893,10 @@
       });
     }
   });
-
-  function copyPix() {
-    const payloadElem = document.getElementById('pixPayload');
-    if (payloadElem) {
-      const payload = payloadElem.textContent;
-      navigator.clipboard.writeText(payload).then(() => {
-        showToast("✓ Código Copiado!");
-      });
-    }
-  } 
+function copyPix() {
+    const payload = document.getElementById('pixPayload').textContent;
+    navigator.clipboard.writeText(payload).then(() => {
+      showToast("✓ Código Copiado!");
+    });
+  } // <--- CORREÇÃO 2: Adicionada a chave } que faltava para fechar a função
 </script>
