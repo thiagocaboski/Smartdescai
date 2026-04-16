@@ -393,8 +393,8 @@
   // ==========================================
   // CONFIGURAÇÃO DE INFRAESTRUTURA SUPABASE
   // ==========================================
-  const SUPABASE_URL = 'SUA_URL_AQUI'; 
-  const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_AQUI';
+  const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bXN5c3p3bnprbXhvYnZ1b21wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzNjAsImV4cCI6MjA5MTkxOTM2MH0.xpk9Mv9XdsR9iWq9nMb1aTb2ExmGdwNKkc95nF5ytIg';
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ==========================================
@@ -402,90 +402,110 @@
   // ==========================================
   function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
+    if (!t) return; // Segurança caso o elemento não exista
     t.textContent = msg;
     t.className = isError ? 'toast show error' : 'toast show';
     setTimeout(() => t.classList.remove('show'), 3500);
   }
 
   // ==========================================
-  // LÓGICA DE CADASTRO
+  // LÓGICA DE CADASTRO COM FEEDBACKS
   // ==========================================
   document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button');
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const name = document.getElementById('regName').value;
+
+      btn.disabled = true;
       btn.textContent = 'PROCESSANDO...';
       
-      const { error } = await supabaseClient.auth.signUp({
-          email: document.getElementById('regEmail').value,
-          password: document.getElementById('regPassword').value,
-          options: { data: { full_name: document.getElementById('regName').value } }
+      const { data, error } = await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: { data: { full_name: name } }
       });
       
       if (error) {
-          showToast(error.message, true);
+          let msg = error.message;
+          // Melhora a leitura dos erros para o usuário
+          if (msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
+          if (msg.includes("Password should be")) msg = "A senha precisa de pelo menos 6 caracteres.";
+          
+          showToast(msg, true);
+          btn.disabled = false;
           btn.textContent = 'FINALIZAR CADASTRO';
       } else {
-          showToast("Cadastro I.A ativado! Confirme seu e-mail.");
+          showToast("✓ Cadastro I.A ativado! Confirme seu e-mail.");
           e.target.reset();
           btn.textContent = 'CONTA CRIADA';
       }
   });
 
   // ==========================================
-  // LÓGICA DE LOGIN
+  // LÓGICA DE LOGIN COM FEEDBACKS DE SENHA/EMAIL
   // ==========================================
   document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button');
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      btn.disabled = true;
       btn.textContent = 'CONECTANDO AOS NÚCLEOS...';
 
-      const { error } = await supabaseClient.auth.signInWithPassword({
-          email: document.getElementById('loginEmail').value,
-          password: document.getElementById('loginPassword').value
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
       });
 
       if (error) {
-          showToast("Acesso Negado: " + error.message, true);
+          let errorMsg = "Acesso Negado";
+          
+          // Detecta erro de senha ou usuário inexistente
+          if (error.message.includes("Invalid login credentials")) {
+              errorMsg = "E-mail ou senha incorretos.";
+          } else if (error.message.includes("Email not confirmed")) {
+              errorMsg = "Por favor, confirme seu e-mail no seu Gerenciador.";
+          } else {
+              errorMsg = error.message;
+          }
+
+          showToast(errorMsg, true);
+          btn.disabled = false;
           btn.textContent = 'ENTRAR NO SISTEMA';
       } else {
-          showToast("Autenticado. Preparando Dashboard...");
-          // Simulação de transição para o Dashboard
-          setTimeout(() => { window.location.href = '#dashboard'; }, 1500);
+          showToast("✓ Autenticado. Preparando Dashboard...");
+          btn.textContent = 'CONECTADO';
+          
+          // Redireciona após o feedback visual
+          setTimeout(() => { 
+              window.location.href = '#dashboard'; 
+          }, 1500);
       }
   });
 
   // ==========================================
-  // GERAÇÃO DINÂMICA DO QR CODE PIX
+  // GERAÇÃO DO QR CODE PIX (FUNÇÃO AUXILIAR)
   // ==========================================
   window.addEventListener('load', () => {
-    try {
-      new QRCode(document.getElementById("qrcode"), {
-        text: document.getElementById("pixPayload").textContent,
-        width: 160, 
-        height: 160,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.Level.H
+    const payloadElem = document.getElementById("pixPayload");
+    const qrElem = document.getElementById("qrcode");
+    
+    if (payloadElem && qrElem) {
+      new QRCode(qrElem, {
+        text: payloadElem.textContent,
+        width: 160,
+        height: 160
       });
-    } catch(err) {
-      console.warn("Módulo QRCode não carregado corretamente.");
     }
   });
 
-  // Função Copia e Cola
   function copyPix() {
     const payload = document.getElementById('pixPayload').textContent;
     navigator.clipboard.writeText(payload).then(() => {
-      showToast("✓ Código Copiado! Cole no seu App do Banco.");
-    }).catch(() => {
-      // Fallback
-      const el = document.createElement('textarea');
-      el.value = payload;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      showToast("✓ Código Copiado! Cole no seu App do Banco.");
+      showToast("✓ Código Copiado!");
     });
   }
 </script>
