@@ -1,215 +1,495 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartDescAi | Agência de Inteligência Artificial & Performance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartDescAi | Agência de Inteligência Artificial & Performance</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        :root {
-            --bg: #050508; --card: #0d0d14; --card-hover: #151520;
-            --accent: #ff4d00; --accent-glow: rgba(255, 77, 0, 0.4);
-            --green: #22c55e; --green-glow: rgba(34, 197, 94, 0.3);
-            --text: #f0ede8; --muted: #8b8999; --border: rgba(255,255,255,0.06);
-        }
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
-        
-        h1, h2, h3, .syne { font-family:'Syne', sans-serif; font-weight:800; letter-spacing:-0.03em; }
-        h2 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin-bottom: 1rem; }
-        .section-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: block; font-weight: 500;}
+<style>
+  /* VARIÁVEIS E BASE */
+  :root {
+    --bg: #050508; --card: #0d0d14; --card-hover: #151520;
+    --accent: #ff4d00; --accent-glow: rgba(255, 77, 0, 0.4);
+    --green: #22c55e; --green-glow: rgba(34, 197, 94, 0.3);
+    --text: #f0ede8; --muted: #8b8999; --border: rgba(255,255,255,0.06);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
+  
+  /* TIPOGRAFIA */
+  h1, h2, h3, .syne { font-family:'Syne', sans-serif; font-weight:800; letter-spacing:-0.03em; }
+  h2 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin-bottom: 1rem; }
+  .section-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: block; font-weight: 500;}
 
-        nav { position:sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.2rem 5%; background:rgba(5,5,8,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
-        .logo { font-size:1.5rem; color:var(--text); text-decoration:none; display:flex; align-items:center; gap:0.3rem; }
-        .logo span { color:var(--accent); }
-        nav ul { display:flex; gap:2rem; list-style:none; }
-        nav ul a { color:var(--muted); text-decoration:none; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; transition:0.3s; font-weight:500;}
-        nav ul a:hover { color:var(--text); }
-        .btn-nav { background:var(--accent); color:#fff!important; padding:0.6rem 1.2rem; border-radius:4px; }
+  /* NAVEGAÇÃO */
+  nav { position:sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.2rem 5%; background:rgba(5,5,8,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .logo { font-size:1.5rem; color:var(--text); text-decoration:none; display:flex; align-items:center; gap:0.3rem; }
+  .logo span { color:var(--accent); }
+  nav ul { display:flex; gap:2rem; list-style:none; }
+  nav ul a { color:var(--muted); text-decoration:none; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; transition:0.3s; font-weight:500;}
+  nav ul a:hover { color:var(--text); }
+  .btn-nav { background:var(--accent); color:#fff!important; padding:0.6rem 1.2rem; border-radius:4px; }
+  .btn-nav:hover { background:#e04400; transform:translateY(-2px); box-shadow: 0 4px 15px var(--accent-glow);}
 
-        .hero { position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:8rem 5% 5rem; overflow:hidden; }
-        .hero h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 0.95; max-width: 1000px; margin-bottom: 1.5rem; }
-        .hero h1 em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--accent); }
-        .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 3rem; }
+  /* HERO SECTION */
+  .hero { position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:8rem 5% 5rem; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-20%; right:-10%; width:600px; height:600px; background:radial-gradient(circle, var(--accent-glow) 0%, transparent 60%); border-radius:50%; filter:blur(60px); z-index:-1; }
+  .hero h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 0.95; max-width: 1000px; margin-bottom: 1.5rem; }
+  .hero h1 em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--accent); }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 3rem; }
+  .hero-stats { display:flex; gap:3rem; border-top:1px solid var(--border); padding-top:3rem; max-width:800px; }
+  .stat h4 { font-size:2.5rem; color:var(--text); line-height:1; }
+  .stat h4 span { color:var(--accent); }
+  .stat p { font-size:0.8rem; text-transform:uppercase; color:var(--muted); margin-top:0.5rem; }
 
-        .ai-section { padding:8rem 5%; background:var(--bg); }
-        .ai-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:2rem; margin-top:4rem; }
-        .ai-card { background:var(--card); border:1px solid var(--border); padding:3rem 2rem; border-radius:8px; position:relative; transition:0.4s; }
-        .ai-card:hover { transform:translateY(-10px); border-color:var(--accent); }
+  /* MARQUEE ANIMADO */
+  .marquee-wrap { overflow:hidden; background:var(--card); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1rem 0; display:flex; }
+  .marquee { display:flex; white-space:nowrap; animation:scroll 25s linear infinite; }
+  .marquee span { font-family:'Syne', sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; color:var(--muted); margin:0 2rem; display:flex; align-items:center; gap:2rem; }
+  .marquee span::after { content:'✦'; color:var(--accent); }
+  @keyframes scroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
 
-        .pricing-section { padding:8rem 5%; background:linear-gradient(180deg, var(--bg) 0%, var(--card) 100%); border-top:1px solid var(--border); }
-        .pix-box { background:var(--bg); border:1px solid var(--accent); padding:2.5rem; border-radius:12px; text-align:center; box-shadow:0 10px 40px var(--accent-glow); }
-        #qrcode { background:#fff; padding:15px; border-radius:8px; display:inline-block; margin-bottom:1.5rem; }
+  /* AS INTELIGÊNCIAS (NOVA SEÇÃO) */
+  .ai-section { padding:8rem 5%; background:var(--bg); }
+  .ai-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:2rem; margin-top:4rem; }
+  .ai-card { background:var(--card); border:1px solid var(--border); padding:3rem 2rem; border-radius:8px; position:relative; transition:0.4s; overflow:hidden; }
+  .ai-card:hover { transform:translateY(-10px); border-color:var(--accent); background:var(--card-hover); }
+  .ai-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:0.4s; }
+  .ai-card:hover::before { transform:scaleX(1); }
+  .ai-icon { font-size:2.5rem; margin-bottom:1.5rem; display:inline-block; padding:1rem; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--border); }
+  .ai-card h3 { font-size:1.5rem; margin-bottom:1rem; }
+  .ai-card p { color:var(--muted); font-size:0.95rem; margin-bottom:1.5rem; }
+  .ai-features { list-style:none; }
+  .ai-features li { font-size:0.85rem; color:var(--text); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem; }
+  .ai-features li::before { content:'✓'; color:var(--accent); font-weight:bold; }
 
-        .auth-section { padding:8rem 5%; background:var(--bg); }
-        .auth-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; max-width:1000px; margin:0 auto; }
-        .auth-card { background:var(--card); border:1px solid var(--border); padding:3rem; border-radius:12px; }
-        .auth-card.primary { border-top:3px solid var(--accent); }
-        .input-group { margin-bottom:1.5rem; }
-        .input-group label { display:block; font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem; }
-        .input-group input { width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:1rem; border-radius:6px; outline:none; transition:0.3s; }
-        .input-group input:focus { border-color:var(--accent); }
-        
-        .btn-auth { width:100%; padding:1.2rem; border:none; border-radius:6px; font-family:'Syne', sans-serif; font-weight:800; cursor:pointer; transition:0.3s; }
-        .btn-login { background:var(--accent); color:#fff; }
-        .btn-register { background:transparent; border:1px solid var(--border); color:var(--text); }
+  /* PAGAMENTO & PLANO (NOVA SEÇÃO) */
+  .pricing-section { padding:8rem 5%; background:linear-gradient(180deg, var(--bg) 0%, var(--card) 100%); border-top:1px solid var(--border); }
+  .pricing-container { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; max-width:1200px; margin:0 auto; }
+  .pricing-info h2 { font-size:3rem; }
+  .price-tag { display:flex; align-items:baseline; gap:0.5rem; margin:2rem 0; }
+  .price-tag .currency { font-size:1.5rem; color:var(--muted); }
+  .price-tag .amount { font-size:4.5rem; font-family:'Syne', sans-serif; font-weight:800; color:var(--accent); line-height:1; }
+  .price-tag .period { color:var(--muted); }
+  
+  .pix-box { background:var(--bg); border:1px solid var(--accent); padding:2.5rem; border-radius:12px; text-align:center; box-shadow:0 10px 40px var(--accent-glow); position:relative; }
+  .pix-box h3 { color:var(--accent); margin-bottom:1rem; }
+  #qrcode { background:#fff; padding:15px; border-radius:8px; display:inline-block; margin-bottom:1.5rem; }
+  .pix-payload-container { background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:1rem; border-radius:6px; margin-bottom:1.5rem; }
+  .pix-payload { font-size:0.7rem; color:var(--muted); word-break:break-all; font-family:monospace; }
+  .btn-pix { width:100%; padding:1rem; background:var(--accent); color:#fff; border:none; border-radius:6px; font-family:'Syne', sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:0.3s; }
+  .btn-pix:hover { background:#e04400; }
 
-        .toast { position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#000; padding:1rem 2rem; border-radius:6px; font-weight:700; z-index:9999; transform:translateY(150%); opacity:0; transition:0.4s; }
-        .toast.show { transform:translateY(0); opacity:1; }
-        .toast.error { background:#ef4444; color:#fff; }
+  /* ECO SEÇÃO COM BANNER */
+  .eco-section { padding:8rem 5%; background:linear-gradient(135deg, rgba(34,197,94,0.05), var(--bg)); border-top:1px solid rgba(34,197,94,0.2); border-bottom:1px solid rgba(34,197,94,0.2); position:relative; overflow:hidden;}
+  .eco-section::before { content:''; position:absolute; bottom:-20%; left:-10%; width:500px; height:500px; background:radial-gradient(circle, var(--green-glow) 0%, transparent 70%); border-radius:50%; z-index:-1;}
+  .eco-container { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+  .eco-badge { display:inline-block; background:rgba(34,197,94,0.1); color:var(--green); padding:0.5rem 1rem; border-radius:50px; font-size:0.8rem; font-weight:bold; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem; border:1px solid rgba(34,197,94,0.3); }
+  .eco-image-sim { width:100%; height:300px; background:linear-gradient(45deg, #0f2e1b, #1a4d2e); border-radius:12px; border:1px solid rgba(34,197,94,0.3); display:flex; align-items:center; justify-content:center; font-size:5rem; position:relative; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+  .eco-image-sim::after { content:''; position:absolute; inset:0; background:url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.1"/></svg>'); mix-blend-mode: overlay; pointer-events:none;}
 
-        @media(max-width: 768px) { .auth-grid { grid-template-columns:1fr; } nav ul { display:none; } }
-    </style>
+  /* AUTH SECTION */
+  .auth-section { padding:8rem 5%; background:var(--bg); }
+  .auth-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; max-width:1000px; margin:0 auto; }
+  .auth-card { background:var(--card); border:1px solid var(--border); padding:3rem; border-radius:12px; }
+  .auth-card.primary { border-top:3px solid var(--accent); }
+  .input-group { margin-bottom:1.5rem; }
+  .input-group label { display:block; font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem; }
+  .input-group input { width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:1rem; border-radius:6px; outline:none; transition:0.3s; font-family:'DM Sans', sans-serif;}
+  .input-group input:focus { border-color:var(--accent); background:rgba(255,77,0,0.05); }
+  .btn-auth { width:100%; padding:1.2rem; border:none; border-radius:6px; font-family:'Syne', sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:0.3s; }
+  .btn-login { background:var(--accent); color:#fff; }
+  .btn-login:hover { background:#e04400; transform:translateY(-2px); }
+  .btn-register { background:transparent; border:1px solid var(--border); color:var(--text); }
+  .btn-register:hover { background:rgba(255,255,255,0.05); transform:translateY(-2px); }
+
+  /* FOOTER & TRUST BADGES */
+  footer { background:var(--card); border-top:1px solid var(--border); padding:5rem 5% 2rem; }
+  .footer-top { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:4rem; margin-bottom:4rem; }
+  .footer-col h4 { font-family:'Syne', sans-serif; font-size:1.2rem; margin-bottom:1.5rem; color:var(--text); }
+  .footer-col p { color:var(--muted); font-size:0.9rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; }
+  .footer-col a { color:var(--muted); text-decoration:none; transition:0.3s; }
+  .footer-col a:hover { color:var(--accent); }
+  
+  .trust-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; padding-top:2rem; border-top:1px solid var(--border); }
+  .payment-methods { display:flex; gap:1rem; align-items:center; }
+  .payment-methods img { height:24px; filter:grayscale(1) opacity(0.5); transition:0.3s; }
+  .payment-methods img:hover { filter:grayscale(0) opacity(1); }
+  .official-seals { display:flex; gap:2rem; align-items:center; }
+  .official-seals img { height:35px; opacity:0.6; transition:0.3s; }
+  .official-seals img:hover { opacity:1; }
+  .copyright { width:100%; text-align:center; font-size:0.8rem; color:var(--muted); margin-top:2rem; }
+
+  /* NOTIFICAÇÕES TOAST */
+  .toast { position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#000; padding:1rem 2rem; border-radius:6px; font-weight:700; z-index:9999; transform:translateY(150%); opacity:0; transition:all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast.error { background:#ef4444; color:#fff; }
+
+  @media(max-width: 768px) {
+    .pricing-container, .eco-container, .auth-grid { grid-template-columns:1fr; }
+    nav ul { display:none; }
+    .hero h1 { font-size: 3rem; }
+    .hero-stats { flex-direction:column; gap:1.5rem; }
+    .trust-bar { flex-direction:column; justify-content:center; }
+  }
+</style>
 </head>
 <body>
 
-<div id="toast" class="toast">Notificação</div>
+<div id="toast" class="toast">Notificação do Sistema</div>
 
 <nav>
-    <a href="#" class="logo syne">Smart<span>DescAi</span></a>
-    <ul>
-        <li><a href="#tecnologia">Tecnologia</a></li>
-        <li><a href="#planos">Planos</a></li>
-        <li><a href="#auth" class="btn-nav">Acessar Painel</a></li>
-    </ul>
+  <a href="#" class="logo syne">Smart<span>DescAi</span></a>
+  <ul>
+    <li><a href="#tecnologia">Tecnologia IA</a></li>
+    <li><a href="#planos">Planos</a></li>
+    <li><a href="#eco">Impacto Eco</a></li>
+    <li><a href="#auth" class="btn-nav">Acessar Painel</a></li>
+  </ul>
 </nav>
 
 <section class="hero">
-    <span class="section-label">O Futuro do Marketing Digital</span>
-    <h1>A inteligência que escala o seu <em>negócio</em>.</h1>
-    <p>Deixe que nossas IAs autônomas gerenciem seu tráfego, criem suas páginas e otimizem suas vendas 24 horas por dia.</p>
+  <span class="section-label">O Futuro do Marketing Digital</span>
+  <h1>A inteligência que escala o seu <em>negócio</em>.</h1>
+  <p>Deixe que nossas IAs autônomas gerenciem seu tráfego, criem suas páginas e otimizem suas vendas 24 horas por dia. Você foca na estratégia, a SmartDescAi executa.</p>
+  
+  <div class="hero-stats">
+    <div class="stat">
+      <h4>98<span>%</span></h4>
+      <p>Precisão em Copywriting</p>
+    </div>
+    <div class="stat">
+      <h4>24<span>/7</span></h4>
+      <p>Otimização de Anúncios</p>
+    </div>
+    <div class="stat">
+      <h4>-40<span>%</span></h4>
+      <p>Custo por Aquisição (CPA)</p>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>Criação de Landing Pages</span>
+    <span>Gestão de Tráfego Automática</span>
+    <span>Copywriting com IA</span>
+    <span>Análise de Concorrência</span>
+    <span>Relatórios em Tempo Real</span>
+    <span>Criação de Landing Pages</span>
+    <span>Gestão de Tráfego Automática</span>
+    <span>Copywriting com IA</span>
+    <span>Análise de Concorrência</span>
+    <span>Relatórios em Tempo Real</span>
+  </div>
+</div>
+
+<section id="tecnologia" class="ai-section">
+  <div style="text-align:center; max-width:800px; margin:0 auto">
+    <span class="section-label">A Força de Trabalho Digital</span>
+    <h2>Conheça sua nova equipe de alta performance</h2>
+    <p style="color:var(--muted)">Nós não usamos apenas algoritmos comuns. A SmartDescAi é movida por três núcleos autônomos de Inteligência Artificial, cada um especialista em fazer sua empresa lucrar e impactar.</p>
+  </div>
+
+  <div class="ai-grid">
+    <div class="ai-card">
+      <div class="ai-icon">🎯</div>
+      <h3 class="syne">Orion - O Estrategista</h3>
+      <p>Orion é conectado diretamente às APIs do Google Ads e Meta Ads. Ele não dorme. Analisa o comportamento do usuário e ajusta o lance das suas campanhas em tempo real para o menor custo possível.</p>
+      <ul class="ai-features">
+        <li>Gestão de Orçamento Dinâmica</li>
+        <li>Bloqueio de cliques inválidos</li>
+        <li>Testes A/B automatizados (Imagens/Vídeos)</li>
+      </ul>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-icon">✍️</div>
+      <h3 class="syne">Lyra - A Copywriter</h3>
+      <p>Esqueça o bloqueio criativo. A Lyra estuda o seu nicho, analisa a dor do seu cliente e escreve textos altamente persuasivos para suas Landing Pages, E-mails e descrições de produtos.</p>
+      <ul class="ai-features">
+        <li>Gatilhos mentais adaptativos</li>
+        <li>SEO On-Page estruturado</li>
+        <li>Criação de títulos virais</li>
+      </ul>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-icon">🌱</div>
+      <h3 class="syne">Gaia - A Gestora Eco</h3>
+      <p>Gaia é a IA responsável pela nossa transparência. Ela rastreia cada pagamento e calcula automaticamente a conversão de 20% do lucro em cotas de plantio de árvores registradas.</p>
+      <ul class="ai-features">
+        <li>Rastreio de impacto por cliente</li>
+        <li>Certificação de plantio em Blockchain</li>
+        <li>Relatório de pegada de carbono zerada</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section id="planos" class="pricing-section">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h2 class="syne">Autonomia I.A. Completa</h2>
-        <p style="color:var(--muted)">Assinatura mensal para destravar seu crescimento.</p>
-    </div>
-    <div class="pix-box" style="max-width: 500px; margin: 0 auto;">
-        <div id="qrcode"></div>
-        <p style="font-weight:bold; margin-bottom:0.5rem">Chave Celular: +55 (41) 99968-9107</p>
-        <div style="background:rgba(255,255,255,0.03); padding:1rem; border-radius:6px; margin-bottom:1.5rem; font-size:0.7rem; word-break:break-all;" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
-        <button class="btn-auth btn-login" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
-    </div>
+  <div class="pricing-container">
+    <div class="pricing-info">
+      <span class="section-label">Acesso Desbloqueado</span>
+      <h2>Autonomia I.A. Completa</h2>
+      <p style="color:var(--muted); margin-bottom:1rem; font-size:1.1rem;">Liberte-se das tarefas manuais. Contrate a assinatura que coloca as inteligências Orion, Lyra e Gaia para trabalharem para o seu domínio.</p>
+      
+      <div class="price-tag">
+        <span class="currency">R$</span>
+        <span class="amount">49,90</span>
+        <span class="period">/mês</span>
+      </div>
+
+      <ul class="ai-features" style="margin-bottom:2rem; gap:1rem; display:flex; flex-direction:column;">
+        <li>Acesso integral ao Dashboard SmartDescAi</li>
+        <li>Criação ilimitada de Copies com a I.A Lyra</li>
+        <li>Integração de campanhas via Orion</li>
+        <li>Certificado ambiental emitido pela Gaia</li>
+        <li>Suporte dedicado via WhatsApp</li>
+      </ul>
+    </div>
+
+    <div class="pix-box">
+      <h3>Pagamento Instantâneo via PIX</h3>
+      <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.5rem;">Liberação automática do painel após a confirmação.</p>
+      
+      <div id="qrcode"></div>
+      
+      <p style="font-size:0.9rem; font-weight:bold; margin-bottom:0.5rem">Chave Celular: +55 (41) 99968-9107</p>
+      <p style="font-size:0.75rem; color:var(--muted); margin-bottom:1.5rem">Titular: Thiago Caboski</p>
+
+      <div class="pix-payload-container">
+        <div class="pix-payload" id="pixPayload">00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777</div>
+      </div>
+
+      <button class="btn-pix" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
+    </div>
+  </div>
+</section>
+
+<section id="eco" class="eco-section">
+  <div class="eco-container">
+    <div>
+      <div class="eco-badge">Compromisso SmartDescAi</div>
+      <h2>Tecnologia que <span style="color:var(--green)">Respira</span></h2>
+      <p style="color:var(--muted); font-size:1.1rem; margin-bottom:2rem;">
+        O crescimento do seu negócio não precisa custar o futuro do planeta. Nós somos a primeira agência de I.A que devolve vida à Terra.
+      </p>
+      <p style="color:var(--muted); margin-bottom:2rem;">
+        Exatamente <strong>20% de cada mensalidade ou serviço</strong> contratado é convertido diretamente no plantio de árvores nativas em áreas de desmatamento no Brasil. A IA Gaia monitora os fundos e gera seu certificado de impacto no painel.
+      </p>
+      <div style="display:flex; gap:2rem;">
+        <div>
+          <h4 class="syne" style="font-size:2rem; color:var(--green)">1.200+</h4>
+          <p style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Árvores Plantadas</p>
+        </div>
+        <div>
+          <h4 class="syne" style="font-size:2rem; color:var(--green)">20%</h4>
+          <p style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Lucro Destinado</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="eco-image-sim">
+      🌲🌱🌳
+    </div>
+  </div>
 </section>
 
 <section id="auth" class="auth-section">
-    <div class="auth-grid">
-        <div class="auth-card primary">
-            <h3 class="syne">Login</h3>
-            <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Acesse o dashboard.</p>
-            <form id="loginForm">
-                <div class="input-group">
-                    <label>E-mail</label>
-                    <input type="email" id="loginEmail" required>
-                </div>
-                <div class="input-group">
-                    <label>Senha</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <button type="submit" class="btn-auth btn-login">ENTRAR NO SISTEMA</button>
-            </form>
-        </div>
+  <div style="text-align:center; margin-bottom:4rem;">
+    <span class="section-label">Área Restrita</span>
+    <h2>Acesse seu Command Center</h2>
+  </div>
 
-        <div class="auth-card">
-            <h3 class="syne">Criar Conta</h3>
-            <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Inicie sua jornada.</p>
-            <form id="registerForm">
-                <div class="input-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="regName" required>
-                </div>
-                <div class="input-group">
-                    <label>E-mail</label>
-                    <input type="email" id="regEmail" required>
-                </div>
-                <div class="input-group">
-                    <label>Senha</label>
-                    <input type="password" id="regPassword" placeholder="Mín. 6 caracteres" required>
-                </div>
-                <button type="submit" class="btn-auth btn-register">FINALIZAR CADASTRO</button>
-            </form>
-        </div>
-    </div>
+  <div class="auth-grid">
+    <div class="auth-card primary">
+      <h3 class="syne" style="margin-bottom:0.5rem; font-size:1.8rem">Login</h3>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Acesse o dashboard das suas IAs.</p>
+      <form id="loginForm">
+        <div class="input-group">
+          <label>E-mail corporativo</label>
+          <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+        </div>
+        <div class="input-group">
+          <label>Senha de acesso</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-auth btn-login">ENTRAR NO SISTEMA</button>
+      </form>
+    </div>
+
+    <div class="auth-card">
+      <h3 class="syne" style="margin-bottom:0.5rem; font-size:1.8rem">Criar Conta</h3>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:2rem">Inicie a configuração da sua agência.</p>
+      <form id="registerForm">
+        <div class="input-group">
+          <label>Nome Completo</label>
+          <input type="text" id="regName" placeholder="Como quer ser chamado?" required>
+        </div>
+        <div class="input-group">
+          <label>E-mail</label>
+          <input type="email" id="regEmail" placeholder="seu@email.com" required>
+        </div>
+        <div class="input-group">
+          <label>Crie uma Senha</label>
+          <input type="password" id="regPassword" placeholder="Mínimo 6 dígitos" required>
+        </div>
+        <button type="submit" class="btn-auth btn-register">FINALIZAR CADASTRO</button>
+      </form>
+    </div>
+  </div>
 </section>
 
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <a href="#" class="logo syne" style="margin-bottom:1rem">Smart<span>DescAi</span></a>
+      <p>Inteligência artificial aplicada ao marketing digital e conversão em massa.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Contato Direto</h4>
+      <p>✉ <a href="mailto:thiagocaboski28@gmail.com">thiagocaboski28@gmail.com</a></p>
+      <p>📱 <a href="https://wa.me/5541999689107" target="_blank">(41) 99968-9107</a></p>
+      <p>📍 Paraná, Brasil</p>
+    </div>
+    <div class="footer-col">
+      <h4>Links Úteis</h4>
+      <p><a href="#tecnologia">Como Funciona</a></p>
+      <p><a href="#planos">Assinatura IA</a></p>
+      <p><a href="#eco">Relatório Ambiental</a></p>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="payment-methods">
+      <span style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; margin-right:10px">Pagamento Seguro:</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo%E2%80%94Pix.svg" alt="Pix">
+    </div>
+
+    <div class="official-seals">
+      <img src="https://registro.br/img/registrobr-logo.svg" alt="Registro.br Oficial">
+      <div style="display:flex; align-items:center; gap:5px; border:1px solid var(--border); padding:5px 10px; border-radius:4px; opacity:0.7">
+        <img src="https://www.gstatic.com/images/branding/googlelogo/2x/google_logo_light_color_92x30dp.png" alt="Google" style="height:20px; opacity:1">
+        <span style="font-size:0.7rem; font-weight:bold; color:#fff">Ads API</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="copyright">
+    SmartDescAi © 2026. Todos os direitos reservados. Projeto operando com Supabase Auth & PostgreSQL.
+  </div>
+</footer>
+
 <script>
-    // 1. CONFIGURAÇÃO SUPABASE (CHAVES REAIS)
-    const SUPABASE_URL = 'https://mumsyszwznkxmoxbvuomp.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bXN5c3p3bnprbXhvYnZ1b21wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDMzNjAsImV4cCI6MjA5MTkxOTM2MH0.xpk9Mv9XdsR9iWq9nMb1aTb2ExmGdwNKkc95nF5ytIg';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // ==========================================
+  // CONFIGURAÇÃO DE INFRAESTRUTURA SUPABASE
+  // ==========================================
+  const SUPABASE_URL = 'SUA_URL_AQUI'; 
+  const SUPABASE_ANON_KEY = 'SUA_CHAVE_ANON_AQUI';
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function showToast(msg, isError = false) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = isError ? 'toast show error' : 'toast show';
-        setTimeout(() => t.classList.remove('show'), 4000);
-    }
+  // ==========================================
+  // SISTEMA DE NOTIFICAÇÕES (TOAST)
+  // ==========================================
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'toast show error' : 'toast show';
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
 
-    // 2. CADASTRO COM FEEDBACK
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button');
-        btn.textContent = 'CRIANDO...';
-        
-        const { data, error } = await _supabase.auth.signUp({
-            email: document.getElementById('regEmail').value,
-            password: document.getElementById('regPassword').value,
-            options: { data: { full_name: document.getElementById('regName').value } }
-        });
+  // ==========================================
+  // LÓGICA DE CADASTRO
+  // ==========================================
+  document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'PROCESSANDO...';
+      
+      const { error } = await supabaseClient.auth.signUp({
+          email: document.getElementById('regEmail').value,
+          password: document.getElementById('regPassword').value,
+          options: { data: { full_name: document.getElementById('regName').value } }
+      });
+      
+      if (error) {
+          showToast(error.message, true);
+          btn.textContent = 'FINALIZAR CADASTRO';
+      } else {
+          showToast("Cadastro I.A ativado! Confirme seu e-mail.");
+          e.target.reset();
+          btn.textContent = 'CONTA CRIADA';
+      }
+  });
 
-        if (error) {
-            showToast("Erro: " + error.message, true);
-            btn.textContent = 'FINALIZAR CADASTRO';
-        } else {
-            showToast("✓ Conta criada! Verifique seu e-mail.");
-            e.target.reset();
-            btn.textContent = 'SUCESSO!';
-        }
-    });
+  // ==========================================
+  // LÓGICA DE LOGIN
+  // ==========================================
+  document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'CONECTANDO AOS NÚCLEOS...';
 
-    // 3. LOGIN COM FEEDBACK ESPECÍFICO
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button');
-        btn.textContent = 'CONECTANDO...';
+      const { error } = await supabaseClient.auth.signInWithPassword({
+          email: document.getElementById('loginEmail').value,
+          password: document.getElementById('loginPassword').value
+      });
 
-        const { data, error } = await _supabase.auth.signInWithPassword({
-            email: document.getElementById('loginEmail').value,
-            password: document.getElementById('loginPassword').value
-        });
+      if (error) {
+          showToast("Acesso Negado: " + error.message, true);
+          btn.textContent = 'ENTRAR NO SISTEMA';
+      } else {
+          showToast("Autenticado. Preparando Dashboard...");
+          // Simulação de transição para o Dashboard
+          setTimeout(() => { window.location.href = '#dashboard'; }, 1500);
+      }
+  });
 
-        if (error) {
-            if (error.message.includes("Invalid login credentials")) {
-                showToast("E-mail ou senha incorretos!", true);
-            } else {
-                showToast("Erro: " + error.message, true);
-            }
-            btn.textContent = 'ENTRAR NO SISTEMA';
-        } else {
-            showToast("✓ Acesso autorizado!");
-            setTimeout(() => { window.location.href = '#dashboard'; }, 1500);
-        }
-    });
+  // ==========================================
+  // GERAÇÃO DINÂMICA DO QR CODE PIX
+  // ==========================================
+  window.addEventListener('load', () => {
+    try {
+      new QRCode(document.getElementById("qrcode"), {
+        text: document.getElementById("pixPayload").textContent,
+        width: 160, 
+        height: 160,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.Level.H
+      });
+    } catch(err) {
+      console.warn("Módulo QRCode não carregado corretamente.");
+    }
+  });
 
-    // QR CODE & COPIAR PIX
-    window.addEventListener('load', () => {
-        new QRCode(document.getElementById("qrcode"), {
-            text: document.getElementById("pixPayload").textContent,
-            width: 160, height: 160
-        });
-    });
-
-    function copyPix() {
-        navigator.clipboard.writeText(document.getElementById('pixPayload').textContent);
-        showToast("✓ Código PIX copiado!");
-    }
+  // Função Copia e Cola
+  function copyPix() {
+    const payload = document.getElementById('pixPayload').textContent;
+    navigator.clipboard.writeText(payload).then(() => {
+      showToast("✓ Código Copiado! Cole no seu App do Banco.");
+    }).catch(() => {
+      // Fallback
+      const el = document.createElement('textarea');
+      el.value = payload;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast("✓ Código Copiado! Cole no seu App do Banco.");
+    });
+  }
 </script>
 
 </body>
 </html>
+ eu vi que esse codico na parte do cadastro e login não fala se esta com senha incorreta ou se  foi criado a conta para os clientes
