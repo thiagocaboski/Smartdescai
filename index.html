@@ -6,6 +6,8 @@
 <title>SmartDescAi | Marketing Digital</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
   :root {
     --bg: #05050a;--card: #0e0e18;--accent: #ff4d00;--accent2: #ffb800;
@@ -255,67 +257,48 @@
   </div>
 </section>
 
+<section id="auth" class="auth-section">
+  <div class="auth-grid">
+    <div class="auth-card highlighted">
+      <h3>Entrar</h3>
+      <p class="auth-sub">Acesse seu painel de resultados.</p>
+      <form id="loginForm">
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="auth-submit auth-login-btn">Entrar na Conta</button>
+      </form>
+    </div>
+
+    <div class="auth-card">
+      <h3>Cadastrar</h3>
+      <p class="auth-sub">Comece sua jornada digital hoje.</p>
+      <form id="registerForm">
+        <div class="field">
+          <label>Nome Completo</label>
+          <input type="text" id="regName" placeholder="João Silva" required>
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="regEmail" placeholder="seu@email.com" required>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        <button type="submit" class="auth-submit auth-register-btn">Criar Conta Grátis</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section id="contato" class="cta-section">
   <div class="section-label">Pronto para crescer?</div>
   <h2>Vamos construir algo grande juntos</h2>
   <div class="contact-info">
-    <div class="contact-item">✉ <a href="mailto:thiagocaboski28@gmail.com">thiagocaboski28@gmail.com</a></div>
-    <div class="contact-item">📱 <a href="https://wa.me/5541999689107">(41) 99968-9107</a></div>
-  </div>
-</section>
-
-<footer>
-  <div class="logo">Smart<span>DescAi</span></div>
-  <p>© 2025 SmartDescAi Marketing Digital</p>
-  <div class="footer-eco">🌳 20% para o planeta</div>
-</footer>
-
-<script>
-  // Cursor
-  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-  (function anim(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
-    cursor.style.left=mx+'px';cursor.style.top=my+'px';
-    ring.style.left=rx+'px';ring.style.top=ry+'px';
-    requestAnimationFrame(anim)})();
-
-  // PIX PAYLOAD DA IMAGEM
-  const pixPayloadFull = "00020126360014br.gov.bcb.pix0114+5541999689107520400005303986540549.905802BR5914Thiago Caboski6009Sao Paulo62070503***63046777";
-
-  // Gerar QR Code
-  window.addEventListener('load', () => {
-    try {
-      new QRCode(document.getElementById("qrcode"), {
-        text: pixPayloadFull,
-        width: 200, height: 200,
-        colorDark: "#000000", colorLight: "#ffffff",
-        correctLevel: QRCode.Level.M
-      });
-    } catch(e) { console.error("Erro QR", e); }
-  });
-
-  // Função Copiar
-  function copyPix() {
-    navigator.clipboard.writeText(pixPayloadFull).then(() => {
-      showToast("Copia e Cola copiado!");
-    }).catch(() => {
-      const el = document.createElement('textarea');
-      el.value = pixPayloadFull;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      showToast("Copia e Cola copiado!");
-    });
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = '✓ ' + msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-</script>
-</body>
-</html>
+    <div class="contact-item">✉ <a href="mailto:thiagocaboski28
