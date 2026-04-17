@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart_Core | Command Center</title>
+    <title>Smart_Core | Painel de Controle</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -15,35 +14,26 @@
             --neon-cyan: #00f2ff;
             --neon-purple: #bc13fe;
             --dark-bg: #050608;
-            --glass: rgba(15, 17, 26, 0.8);
+            --glass: rgba(15, 20, 30, 0.85);
             --border: rgba(0, 242, 255, 0.2);
-            --text: #e6edf3;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
 
         body {
             background: var(--dark-bg);
-            color: var(--text);
-            overflow-x: hidden;
-            background-image: linear-gradient(to bottom, #050608, #0a0b10);
+            color: #e6edf3;
+            background-image: radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.1), transparent 60%);
+            min-height: 100vh;
         }
 
-        /* Background Animated Glow */
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.15), transparent 50%);
-            z-index: -1;
-        }
-
-        /* Notificações Neon */
+        /* Notificações */
         #toast {
             position: fixed; bottom: 20px; right: 20px; padding: 15px 25px;
             background: var(--glass); border-left: 4px solid var(--neon-cyan);
             color: var(--neon-cyan); font-weight: bold; border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
-            transform: translateX(150%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10001;
+            transform: translateX(150%); transition: 0.5s; z-index: 10001;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
         }
         #toast.show { transform: translateX(0); }
 
@@ -60,202 +50,115 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Modal de Pagamento Cyberpunk */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px); display: none; align-items: center; 
-            justify-content: center; z-index: 9999;
-        }
-        .modal-card {
-            background: var(--glass); border: 1px solid var(--border);
-            width: 90%; max-width: 400px; padding: 40px; border-radius: 10px;
-            text-align: center; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-        }
-        .modal-card h2 { color: var(--neon-cyan); font-size: 2rem; margin-bottom: 10px; }
-        .pix-box { 
-            background: white; padding: 15px; border-radius: 8px; margin: 20px 0;
-            display: inline-block;
-        }
-        .pix-code-input {
-            width: 100%; background: #000; border: 1px solid var(--border);
-            color: #8b949e; padding: 10px; border-radius: 5px; font-size: 0.7rem;
-            margin-bottom: 15px; text-align: center;
-        }
-
-        /* Dashboard Layout */
-        .header {
-            padding: 20px 40px; background: var(--glass);
+        /* Estilo do Dashboard */
+        header {
+            padding: 20px 5%; background: var(--glass);
             border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
         }
         .logo { font-size: 1.8rem; font-weight: 800; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
         
-        .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto;
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; padding: 40px 5%;
         }
 
-        .ia-card {
+        .card {
             background: var(--glass); border: 1px solid var(--border);
-            padding: 30px; border-radius: 12px; transition: 0.4s;
-            position: relative; overflow: hidden;
+            padding: 25px; border-radius: 12px; transition: 0.3s;
         }
-        .ia-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); }
-        
+        .card:hover { border-color: var(--neon-cyan); transform: translateY(-3px); }
+
         .btn-neon {
             width: 100%; padding: 12px; background: transparent;
             border: 1px solid var(--neon-cyan); color: var(--neon-cyan);
-            font-weight: bold; cursor: pointer; transition: 0.3s;
-            border-radius: 4px; text-transform: uppercase; letter-spacing: 1px;
+            font-weight: bold; cursor: pointer; border-radius: 4px;
+            text-transform: uppercase; margin-top: 15px;
         }
-        .btn-neon:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
+        .btn-neon:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
 
-        .input-field {
-            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #30363d;
-            padding: 12px; border-radius: 6px; color: #fff; margin: 15px 0; outline: none;
+        /* Modal de Bloqueio (Pagamento) */
+        #payModal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: none; align-items: center; justify-content: center; z-index: 999;
+            backdrop-filter: blur(5px);
         }
-        .response-box {
-            margin-top: 15px; padding: 15px; background: rgba(0, 242, 255, 0.05);
-            border-radius: 6px; border-left: 2px solid var(--neon-cyan); display: none;
+        .pay-card {
+            background: var(--glass); border: 1px solid var(--neon-purple);
+            padding: 40px; border-radius: 15px; text-align: center; max-width: 400px;
         }
-
-        .logout-btn { color: #ff4d4d; cursor: pointer; background: none; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="mainLoader">
-        <div class="spinner"></div>
-        <p style="margin-top: 15px; color: var(--neon-cyan); letter-spacing: 2px;">AUTENTICANDO SISTEMA...</p>
-    </div>
+    <div id="mainLoader"><div class="spinner"></div><p style="margin-top:15px">VERIFICANDO ACESSO...</p></div>
+    <div id="toast"></div>
 
-    <div id="toast">Mensagem do Sistema</div>
-
-    <div id="paymentModal" class="modal-overlay">
-        <div class="modal-card">
-            <h2>NÚCLEO BLOQUEADO</h2>
-            <p style="color: #8b949e;">Acesso vitalício pendente de ativação.</p>
-            <div class="pix-box">
-                <i class="fas fa-qrcode fa-5x" style="color: #000;"></i>
-            </div>
-            <input type="text" class="pix-code-input" id="pixCode" readonly value="GERANDO PIX AUTOMÁTICO...">
-            <button class="btn-neon" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
-            <button class="btn-neon" style="margin-top: 10px; border-color: #fff; color: #fff;" onclick="location.reload()">JÁ PAGUEI / ATUALIZAR</button>
+    <div id="payModal">
+        <div class="pay-card">
+            <i class="fas fa-lock-open" style="font-size: 3rem; color: var(--neon-purple);"></i>
+            <h2 style="margin: 20px 0">ACESSO PENDENTE</h2>
+            <p style="color: #8b949e; margin-bottom: 20px;">Ative sua licença vitalícia da Smart_Core para liberar as ferramentas.</p>
+            <button class="btn-neon" onclick="window.open('SEU_LINK_DO_MERCADO_PAGO', '_blank')" style="border-color: var(--neon-purple); color: var(--neon-purple);">ATIVAR AGORA</button>
         </div>
     </div>
 
-    <div id="app" style="display: none;">
-        <header class="header">
-            <div class="logo">SMART_CORE <span style="font-weight: 300; font-size: 0.8rem; vertical-align: middle;">V1.0</span></div>
-            <div style="display: flex; gap: 20px; align-items: center;">
-                <span id="userEmail" style="font-size: 0.9rem; color: var(--neon-cyan);">user@smartcore</span>
-                <button onclick="handleLogout()" class="logout-btn">SAIR</button>
-            </div>
+    <div id="app" style="display:none">
+        <header>
+            <div class="logo">SMART_CORE</div>
+            <button onclick="logout()" style="background:none; border:none; color:#ff4d4d; cursor:pointer">SAIR</button>
         </header>
-
-        <div class="grid-container">
-            <div class="ia-card">
-                <i class="fas fa-magic" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
-                <h3 style="margin-top: 15px;">SmartDescAi</h3>
-                <p style="color: #8b949e; font-size: 0.9rem;">Gerador de descrições que vendem sozinhas.</p>
-                <textarea id="in1" class="input-field" placeholder="Nome do produto e características..."></textarea>
-                <button class="btn-neon" onclick="runIA('in1', 'out1')">GERAR AGORA</button>
-                <div id="out1" class="response-box"></div>
-            </div>
-
-            <div class="ia-card">
-                <i class="fas fa-chart-line" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
-                <h3 style="margin-top: 15px;">Analisador de Tráfego</h3>
-                <p style="color: #8b949e; font-size: 0.9rem;">Análise de métricas e sugestões de escala.</p>
-                <input id="in2" class="input-field" placeholder="Cole o link ou métricas (CTR, CPC)...">
-                <button class="btn-neon" onclick="runIA('in2', 'out2')">ANALISAR</button>
-                <div id="out2" class="response-box"></div>
-            </div>
-
-            <div class="ia-card">
-                <i class="fas fa-comments" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
-                <h3 style="margin-top: 15px;">Chatbot Estrategista</h3>
-                <p style="color: #8b949e; font-size: 0.9rem;">Tire dúvidas sobre seu funil de vendas.</p>
-                <textarea id="in3" class="input-field" placeholder="Qual seu problema de vendas hoje?"></textarea>
-                <button class="btn-neon" onclick="runIA('in3', 'out3')">CONSULTAR</button>
-                <div id="out3" class="response-box"></div>
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-robot"></i> SmartDescAi</h3>
+                <p style="font-size: 0.8rem; color:#8b949e">Gerador de descrições magnéticas.</p>
+                <textarea id="descInput" placeholder="Ex: Relógio Inteligente à prova d'água" style="width:100%; margin:15px 0; padding:10px; background:#000; border:1px solid #333; color:#fff; border-radius:4px"></textarea>
+                <button class="btn-neon" onclick="generateDesc()">GERAR DESCRIÇÃO</button>
+                <div id="result" style="margin-top:15px; display:none; padding:10px; border-left:2px solid var(--neon-cyan); font-size:0.9rem"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Configurações Iniciais
-        const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
-        const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+        const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co'; //
+        const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG'; //
         const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        // Sistema de Avisos
-        function notify(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+        function notify(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
-        // Porteiro de Acesso
-        async function checkSession() {
-            const { data: { user } } = await supabase.auth.getUser();
-            
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
+        async function checkAccess() {
+            const { data: { user } } = await supabase.auth.getUser(); //
+            if (!user) return window.location.href = 'index.html';
 
-            document.getElementById('userEmail').innerText = user.email.toLowerCase();
-
-            // Checa status na tabela 'perfis'
+            // Busca o status na tabela 'perfis' que você criou
             const { data: profile } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
-                .single();
+                .single(); //
 
             document.getElementById('mainLoader').style.display = 'none';
 
             if (profile && profile.status_pagamento) {
                 document.getElementById('app').style.display = 'block';
-                notify("SISTEMA OPERACIONAL");
+                notify("BEM-VINDO AO COMANDO");
             } else {
-                document.getElementById('paymentModal').style.display = 'flex';
-                // Simulando geração de PIX para o teste visual
-                setTimeout(() => {
-                    document.getElementById('pixCode').value = "00020101021226830014br.gov.bcb.pix0136...";
-                }, 2000);
+                document.getElementById('payModal').style.display = 'flex';
             }
         }
 
-        // Funções de Ação
-        function copyPix() {
-            const el = document.getElementById('pixCode');
-            el.select();
-            document.execCommand('copy');
-            notify("PIX COPIADO PARA O CLIPBOARD");
+        async function logout() { await supabase.auth.signOut(); window.location.href = 'index.html'; }
+
+        function generateDesc() {
+            const val = document.getElementById('descInput').value;
+            if(!val) return notify("DIGITE O NOME DO PRODUTO");
+            const res = document.getElementById('result');
+            res.style.display = 'block';
+            res.innerHTML = "Processando descrição estratégica...";
+            setTimeout(()=> res.innerHTML = "<strong>SUGESTÃO:</strong> Desperte o desejo absoluto com o novo " + val + ". Tecnologia de ponta e estilo inigualável. Oferta limitada!", 2000);
         }
 
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            window.location.href = 'index.html';
-        }
-
-        function runIA(inId, outId) {
-            const val = document.getElementById(inId).value;
-            if(!val) return notify("INSIRA DADOS PARA PROCESSAR");
-            
-            const out = document.getElementById(outId);
-            out.style.display = 'block';
-            out.innerHTML = `<i class="fas fa-sync fa-spin"></i> Processando nos servidores SmartCore...`;
-            
-            setTimeout(() => {
-                out.innerHTML = `<strong>RESULTADO:</strong> Baseado nos dados fornecidos, a estratégia ideal para <strong>${val}</strong> é focar em criativos de 'unboxing' e oferta de escassez (últimas 24h).`;
-            }, 2000);
-        }
-
-        window.onload = checkSession;
+        window.onload = checkAccess;
     </script>
 </body>
 </html>
