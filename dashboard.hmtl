@@ -3,346 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart_Core | Painel de I.A</title>
+    <title>Smart_Core | Command Center</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
             --neon-cyan: #00f2ff;
-            --dark-bg: #0a0b10;
-            --glass-bg: rgba(20, 22, 30, 0.7);
-            --border-glass: rgba(0, 242, 255, 0.15);
-            --text-main: #e6edf3;
-            --text-muted: #8b949e;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050608;
+            --glass: rgba(15, 17, 26, 0.8);
+            --border: rgba(0, 242, 255, 0.2);
+            --text: #e6edf3;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-main);
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 242, 255, 0.05), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.05), transparent 25%);
+            background: var(--dark-bg);
+            color: var(--text);
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, #050608, #0a0b10);
         }
 
-        /* SISTEMA DE TOAST (NOTIFICAÇÕES) */
-        .toast {
-            visibility: hidden; min-width: 250px; background-color: var(--neon-cyan);
-            color: #000; text-align: center; border-radius: 5px; padding: 16px;
-            position: fixed; z-index: 10000; left: 50%; bottom: 30px;
-            transform: translateX(-50%); font-weight: bold; box-shadow: 0 0 15px var(--neon-cyan);
+        /* Background Animated Glow */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.15), transparent 50%);
+            z-index: -1;
         }
-        .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 3.5s; }
-        .toast.error { background-color: #ff3366; box-shadow: 0 0 15px #ff3366; color: white; }
-        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
-        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
-        /* MODAL DE PAGAMENTO (O PORTEIRO) */
+        /* Notificações Neon */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px; padding: 15px 25px;
+            background: var(--glass); border-left: 4px solid var(--neon-cyan);
+            color: var(--neon-cyan); font-weight: bold; border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+            transform: translateX(150%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10001;
+        }
+        #toast.show { transform: translateX(0); }
+
+        /* Loader de Segurança */
+        #mainLoader {
+            position: fixed; inset: 0; background: var(--dark-bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10000;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 3px solid transparent;
+            border-top-color: var(--neon-cyan); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Modal de Pagamento Cyberpunk */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px); display: none; align-items: center; 
+            justify-content: center; z-index: 9999;
         }
-        .modal-content {
-            background: var(--glass-bg); width: 90%; max-width: 450px;
-            padding: 30px; border-radius: 20px; position: relative;
-            border: 1px solid var(--border-glass); text-align: center;
-            box-shadow: 0 0 40px rgba(0, 242, 255, 0.1);
+        .modal-card {
+            background: var(--glass); border: 1px solid var(--border);
+            width: 90%; max-width: 400px; padding: 40px; border-radius: 10px;
+            text-align: center; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
-        .neon-border {
-            position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            box-shadow: 0 0 15px var(--neon-cyan); border-radius: 20px 20px 0 0;
+        .modal-card h2 { color: var(--neon-cyan); font-size: 2rem; margin-bottom: 10px; }
+        .pix-box { 
+            background: white; padding: 15px; border-radius: 8px; margin: 20px 0;
+            display: inline-block;
         }
-        .modal-header h2 { color: var(--neon-cyan); letter-spacing: 2px; font-size: 1.8rem; }
-        .modal-header p { color: var(--text-muted); }
-        .value-tag { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
-        .value-tag span { color: var(--neon-cyan); font-size: 1.5rem; }
-        .qr-placeholder {
-            background: white; width: 180px; height: 180px; margin: 25px auto;
-            border-radius: 12px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; color: #333;
+        .pix-code-input {
+            width: 100%; background: #000; border: 1px solid var(--border);
+            color: #8b949e; padding: 10px; border-radius: 5px; font-size: 0.7rem;
+            margin-bottom: 15px; text-align: center;
         }
-        #pixCopyPaste {
-            width: 100%; background: #161b22; border: 1px solid #30363d; color: var(--text-muted);
-            padding: 12px; border-radius: 5px; text-align: center; margin-top: 15px; outline: none;
-        }
-        .btn-neon {
-            background: var(--neon-cyan); color: black; border: none; width: 100%;
-            padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer;
-            transition: 0.3s; margin-top: 10px; font-size: 1.1rem;
-        }
-        .btn-neon:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--neon-cyan); }
-        .modal-footer { margin-top: 25px; border-top: 1px solid #30363d; padding-top: 15px; }
-        .btn-secondary { background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-secondary:hover { background: rgba(0, 242, 255, 0.1); }
 
-        /* LAYOUT DO DASHBOARD */
-        .dashboard-container { display: none; /* Escondido até pagar */ height: 100vh; display: flex; flex-direction: column; }
+        /* Dashboard Layout */
+        .header {
+            padding: 20px 40px; background: var(--glass);
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
         
-        .topbar {
-            background: var(--glass-bg); border-bottom: 1px solid var(--border-glass);
-            padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto;
         }
-        .logo-dash { color: var(--neon-cyan); font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; }
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        .btn-logout { background: transparent; color: #ff3366; border: 1px solid #ff3366; padding: 5px 15px; border-radius: 5px; cursor: pointer; transition: 0.3s;}
-        .btn-logout:hover { background: rgba(255, 51, 102, 0.1); }
 
-        .main-content { padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; }
-        .welcome-text { margin-bottom: 30px; }
-        .welcome-text h1 { font-size: 2.5rem; font-weight: 400; }
-        .welcome-text span { color: var(--neon-cyan); font-weight: bold; }
-
-        /* GRID DE I.As */
-        .ia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        
         .ia-card {
-            background: var(--glass-bg); border: 1px solid var(--border-glass);
-            border-radius: 15px; padding: 25px; transition: 0.3s; position: relative;
-            overflow: hidden;
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 30px; border-radius: 12px; transition: 0.4s;
+            position: relative; overflow: hidden;
         }
-        .ia-card::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            transition: 0.5s;
-        }
-        .ia-card:hover::before { left: 100%; }
-        .ia-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 242, 255, 0.05); }
+        .ia-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); }
         
-        .ia-icon { font-size: 2rem; color: var(--neon-cyan); margin-bottom: 15px; }
-        .ia-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
-        .ia-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; min-height: 40px; }
-        
-        .input-ia {
-            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #30363d;
-            color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; resize: none;
+        .btn-neon {
+            width: 100%; padding: 12px; background: transparent;
+            border: 1px solid var(--neon-cyan); color: var(--neon-cyan);
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 1px;
         }
-        .input-ia:focus { outline: none; border-color: var(--neon-cyan); }
-        
-        .output-ia {
-            background: rgba(0,0,0,0.8); padding: 15px; border-radius: 5px;
-            font-size: 0.9rem; color: #a5d6ff; border-left: 3px solid var(--neon-cyan);
-            display: none; margin-top: 15px;
+        .btn-neon:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
+
+        .input-field {
+            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #30363d;
+            padding: 12px; border-radius: 6px; color: #fff; margin: 15px 0; outline: none;
         }
+        .response-box {
+            margin-top: 15px; padding: 15px; background: rgba(0, 242, 255, 0.05);
+            border-radius: 6px; border-left: 2px solid var(--neon-cyan); display: none;
+        }
+
+        .logout-btn { color: #ff4d4d; cursor: pointer; background: none; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="toast" class="toast">Notificação</div>
+    <div id="mainLoader">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: var(--neon-cyan); letter-spacing: 2px;">AUTENTICANDO SISTEMA...</p>
+    </div>
+
+    <div id="toast">Mensagem do Sistema</div>
 
     <div id="paymentModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="neon-border"></div>
-            <div class="modal-header">
-                <h2><i class="fas fa-shield-alt"></i> ACESSO RESTRITO</h2>
-                <p>Ative seu núcleo para liberar a Smart_Core</p>
+        <div class="modal-card">
+            <h2>NÚCLEO BLOQUEADO</h2>
+            <p style="color: #8b949e;">Acesso vitalício pendente de ativação.</p>
+            <div class="pix-box">
+                <i class="fas fa-qrcode fa-5x" style="color: #000;"></i>
             </div>
-            <div class="value-tag">VALOR DO ACESSO: <span>R$ 49,90</span></div>
-            
-            <div id="qrCodeContainer" class="qr-placeholder">
-                <i class="fas fa-qrcode fa-4x" id="qrIcon"></i>
-                <p id="qrText" style="margin-top: 10px; font-size: 0.8rem;">Gerando via Mercado Pago...</p>
+            <input type="text" class="pix-code-input" id="pixCode" readonly value="GERANDO PIX AUTOMÁTICO...">
+            <button class="btn-neon" onclick="copyPix()">COPIAR CÓDIGO PIX</button>
+            <button class="btn-neon" style="margin-top: 10px; border-color: #fff; color: #fff;" onclick="location.reload()">JÁ PAGUEI / ATUALIZAR</button>
+        </div>
+    </div>
+
+    <div id="app" style="display: none;">
+        <header class="header">
+            <div class="logo">SMART_CORE <span style="font-weight: 300; font-size: 0.8rem; vertical-align: middle;">V1.0</span></div>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <span id="userEmail" style="font-size: 0.9rem; color: var(--neon-cyan);">user@smartcore</span>
+                <button onclick="handleLogout()" class="logout-btn">SAIR</button>
+            </div>
+        </header>
+
+        <div class="grid-container">
+            <div class="ia-card">
+                <i class="fas fa-magic" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
+                <h3 style="margin-top: 15px;">SmartDescAi</h3>
+                <p style="color: #8b949e; font-size: 0.9rem;">Gerador de descrições que vendem sozinhas.</p>
+                <textarea id="in1" class="input-field" placeholder="Nome do produto e características..."></textarea>
+                <button class="btn-neon" onclick="runIA('in1', 'out1')">GERAR AGORA</button>
+                <div id="out1" class="response-box"></div>
             </div>
 
-            <input type="text" id="pixCopyPaste" readonly value="Aguardando conexão com a API..." />
-            <button onclick="copyPixCode()" class="btn-neon"><i class="fas fa-copy"></i> COPIAR CÓDIGO PIX</button>
-            
-            <div class="modal-footer">
-                <p><i class="fas fa-sync-alt fa-spin"></i> Aguardando pagamento automático...</p>
-                <button onclick="verificarAcesso()" class="btn-secondary">JÁ PAGUEI / ATUALIZAR STATUS</button>
+            <div class="ia-card">
+                <i class="fas fa-chart-line" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
+                <h3 style="margin-top: 15px;">Analisador de Tráfego</h3>
+                <p style="color: #8b949e; font-size: 0.9rem;">Análise de métricas e sugestões de escala.</p>
+                <input id="in2" class="input-field" placeholder="Cole o link ou métricas (CTR, CPC)...">
+                <button class="btn-neon" onclick="runIA('in2', 'out2')">ANALISAR</button>
+                <div id="out2" class="response-box"></div>
+            </div>
+
+            <div class="ia-card">
+                <i class="fas fa-comments" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
+                <h3 style="margin-top: 15px;">Chatbot Estrategista</h3>
+                <p style="color: #8b949e; font-size: 0.9rem;">Tire dúvidas sobre seu funil de vendas.</p>
+                <textarea id="in3" class="input-field" placeholder="Qual seu problema de vendas hoje?"></textarea>
+                <button class="btn-neon" onclick="runIA('in3', 'out3')">CONSULTAR</button>
+                <div id="out3" class="response-box"></div>
             </div>
         </div>
     </div>
 
-    <div id="dashboardContent" class="dashboard-container" style="display: none;">
-        <header class="topbar">
-            <div class="logo-dash"><i class="fas fa-brain"></i> SMART_CORE</div>
-            <div class="user-info">
-                <span id="userEmailDisplay"><i class="fas fa-user-astronaut"></i> Carregando...</span>
-                <button onclick="logout()" class="btn-logout"><i class="fas fa-power-off"></i> Sair</button>
-            </div>
-        </header>
-
-        <main class="main-content">
-            <div class="welcome-text">
-                <h1>Painel de Controle <span>Ativado</span></h1>
-                <p>Bem-vindo aos núcleos operacionais da Smart_Core. Selecione a I.A desejada.</p>
-            </div>
-
-            <div class="ia-grid">
-                
-                <div class="ia-card">
-                    <i class="fas fa-pen-nib ia-icon"></i>
-                    <h3>SmartDescAi</h3>
-                    <p>Gerador de descrições persuasivas para e-commerce.</p>
-                    <textarea id="descInput" class="input-ia" rows="3" placeholder="Ex: Tênis Nike AirMax, cor preta, ideal para corrida..."></textarea>
-                    <button class="btn-neon" onclick="simularIA('descInput', 'descOutput', 'Gerando descrição focada em conversão...')">
-                        <i class="fas fa-bolt"></i> GERAR DESCRIÇÃO
-                    </button>
-                    <div id="descOutput" class="output-ia"></div>
-                </div>
-
-                <div class="ia-card">
-                    <i class="fas fa-chart-network ia-icon"></i>
-                    <h3>Analisador de Tráfego</h3>
-                    <p>Cole o link do seu anúncio para a I.A analisar a performance.</p>
-                    <input type="text" id="trafegoInput" class="input-ia" placeholder="Cole a URL da sua campanha aqui...">
-                    <button class="btn-neon" onclick="simularIA('trafegoInput', 'trafegoOutput', 'Analisando métricas e CTR...')">
-                        <i class="fas fa-search-dollar"></i> ANALISAR CAMPANHA
-                    </button>
-                    <div id="trafegoOutput" class="output-ia"></div>
-                </div>
-
-                <div class="ia-card">
-                    <i class="fas fa-robot ia-icon"></i>
-                    <h3>Chatbot Estrategista</h3>
-                    <p>Converse com nossa I.A treinada em marketing digital.</p>
-                    <textarea id="chatInput" class="input-ia" rows="3" placeholder="Qual sua dúvida sobre vendas hoje?"></textarea>
-                    <button class="btn-neon" onclick="simularIA('chatInput', 'chatOutput', 'Processando estratégia de vendas...')">
-                        <i class="fas fa-paper-plane"></i> ENVIAR MENSAGEM
-                    </button>
-                    <div id="chatOutput" class="output-ia"></div>
-                </div>
-
-            </div>
-        </main>
-    </div>
-
     <script>
-        // 1. CHAVES DO SUPABASE (IGUAL AO INDEX)
-        const SUPABASE_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Configurações Iniciais
+        const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
+        const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        // 2. FUNÇÃO DE TOAST
-        function showToast(msg, isError = false) {
+        // Sistema de Avisos
+        function notify(msg) {
             const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = isError ? 'toast show error' : 'toast show';
-            setTimeout(() => t.classList.remove('show'), 3500);
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // 3. O PORTEIRO: VERIFICA SE ESTÁ LOGADO E SE PAGOU
-        async function verificarAcesso() {
-            // Pega o usuário da sessão atual
-            const { data: { user } } = await supabaseClient.auth.getUser();
-
+        // Porteiro de Acesso
+        async function checkSession() {
+            const { data: { user } } = await supabase.auth.getUser();
+            
             if (!user) {
-                // Se tentou entrar na URL sem logar, chuta de volta pro index
                 window.location.href = 'index.html';
                 return;
             }
 
-            document.getElementById('userEmailDisplay').innerHTML = `<i class="fas fa-user-astronaut"></i> ${user.email}`;
+            document.getElementById('userEmail').innerText = user.email.toLowerCase();
 
-            // Consulta a tabela perfis para ver o status_pagamento
-            const { data: perfil, error } = await supabaseClient
+            // Checa status na tabela 'perfis'
+            const { data: profile } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
                 .single();
 
-            if (perfil && perfil.status_pagamento === true) {
-                // SUCESSO! Libera o Dashboard e esconde o Modal
-                document.getElementById('paymentModal').style.display = 'none';
-                document.getElementById('dashboardContent').style.display = 'flex';
-                showToast("✓ Núcleos ativados. Bem-vindo!");
+            document.getElementById('mainLoader').style.display = 'none';
+
+            if (profile && profile.status_pagamento) {
+                document.getElementById('app').style.display = 'block';
+                notify("SISTEMA OPERACIONAL");
             } else {
-                // BLOQUEADO! Mostra o Modal e gera o Pix
                 document.getElementById('paymentModal').style.display = 'flex';
-                document.getElementById('dashboardContent').style.display = 'none';
-                gerarPixViaEdgeFunction(user.email);
+                // Simulando geração de PIX para o teste visual
+                setTimeout(() => {
+                    document.getElementById('pixCode').value = "00020101021226830014br.gov.bcb.pix0136...";
+                }, 2000);
             }
         }
 
-        // 4. INTEGRAÇÃO MERCADO PAGO (Chama a sua Edge Function)
-        async function gerarPixViaEdgeFunction(email) {
-            
-            // COLE AQUI A URL DA SUA EDGE FUNCTION DO SUPABASE DEPOIS
-            const edgeFunctionUrl = 'COLE_SUA_URL_AQUI_DEPOIS'; 
-            
-            // SIMULAÇÃO: Como a Edge Function ainda não tá conectada aí, vamos colocar um código falso para testar o visual
-            setTimeout(() => {
-                const mockPix = "00020101021226830014br.gov.bcb.pix013660000000-0000-0000-0000-000000000000520400005303986540549.905802BR5913Smart_Core_IA6009CURITIBA62070503***6304E2B1";
-                document.getElementById('pixCopyPaste').value = mockPix;
-                document.getElementById('qrIcon').className = "fas fa-check-circle fa-4x";
-                document.getElementById('qrIcon').style.color = "#00f2ff";
-                document.getElementById('qrText').innerText = "Pix Gerado! Copie o código abaixo.";
-            }, 1500);
-
-            /* CÓDIGO REAL PARA DESCOMENTAR DEPOIS:
-            try {
-                const response = await fetch(edgeFunctionUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, valor: 49.90 })
-                });
-                const data = await response.json();
-                if(data.pix_code) {
-                    document.getElementById('pixCopyPaste').value = data.pix_code;
-                }
-            } catch (error) {
-                showToast("Erro ao conectar com banco. Chame o suporte.", true);
-            }
-            */
+        // Funções de Ação
+        function copyPix() {
+            const el = document.getElementById('pixCode');
+            el.select();
+            document.execCommand('copy');
+            notify("PIX COPIADO PARA O CLIPBOARD");
         }
 
-        function copyPixCode() {
-            const input = document.getElementById('pixCopyPaste');
-            input.select();
-            document.execCommand("copy");
-            showToast("✓ Código Pix copiado!");
-        }
-
-        // 5. FUNÇÃO DE LOGOUT
-        async function logout() {
-            await supabaseClient.auth.signOut();
+        async function handleLogout() {
+            await supabase.auth.signOut();
             window.location.href = 'index.html';
         }
 
-        // 6. SIMULADOR DAS I.As (Enquanto você não conecta a API da OpenAI/Gemini)
-        function simularIA(inputId, outputId, msgCarregando) {
-            const inputVal = document.getElementById(inputId).value;
-            if (!inputVal) {
-                showToast("Insira algum dado primeiro!", true);
-                return;
-            }
-
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> PROCESSANDO...`;
-            btn.disabled = true;
-
-            showToast(msgCarregando);
-
-            // Simula o tempo que uma I.A demora para responder (2.5 segundos)
+        function runIA(inId, outId) {
+            const val = document.getElementById(inId).value;
+            if(!val) return notify("INSIRA DADOS PARA PROCESSAR");
+            
+            const out = document.getElementById(outId);
+            out.style.display = 'block';
+            out.innerHTML = `<i class="fas fa-sync fa-spin"></i> Processando nos servidores SmartCore...`;
+            
             setTimeout(() => {
-                const outputDiv = document.getElementById(outputId);
-                outputDiv.style.display = 'block';
-                
-                if(inputId === 'descInput') {
-                    outputDiv.innerHTML = `<strong>✨ SmartDescAi:</strong> Descubra o poder de caminhar nas nuvens. Este produto combina design premium com tecnologia de ponta para garantir conforto o dia todo. Adquira agora e transforme sua rotina.`;
-                } else if (inputId === 'trafegoInput') {
-                    outputDiv.innerHTML = `<strong>📊 Análise de Risco:</strong> O CTR da sua campanha está abaixo de 1.5%. Sugiro pausar os criativos estáticos e testar formatos em vídeo nos primeiros 3 segundos.`;
-                } else {
-                    outputDiv.innerHTML = `<strong>🤖 Estrategista:</strong> Para escalar essa venda, recomendo aplicar uma oferta de "Compre 1, Leve 2" apenas no remarketing para quem abandonou o carrinho nos últimos 3 dias.`;
-                }
-
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 2500);
+                out.innerHTML = `<strong>RESULTADO:</strong> Baseado nos dados fornecidos, a estratégia ideal para <strong>${val}</strong> é focar em criativos de 'unboxing' e oferta de escassez (últimas 24h).`;
+            }, 2000);
         }
 
-        // Inicia tudo quando a tela carrega
-        window.addEventListener('load', verificarAcesso);
-
+        window.onload = checkSession;
     </script>
 </body>
 </html>
