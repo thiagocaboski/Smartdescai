@@ -3,207 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartDesc.Ai | Painel de Controle</title>
-
+    <title>SmartDesc.Ai | Painel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        :root {
-            --neon-cyan: #00f2ff;
-            --neon-purple: #bc13fe;
-            --dark-bg: #050608;
-            --glass: rgba(15, 20, 30, 0.85);
-            --border: rgba(0, 242, 255, 0.2);
-        }
-
+        :root { --neon-cyan: #00f2ff; --dark-bg: #050608; --glass: rgba(15, 20, 30, 0.85); --border: rgba(0, 242, 255, 0.2); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-
-        body {
-            background: var(--dark-bg);
-            color: #e6edf3;
-            background-image: radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.1), transparent 60%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Loader */
-        #mainLoader {
-            position: fixed; inset: 0; background: var(--dark-bg);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 10000;
-        }
-        .spinner {
-            width: 50px; height: 50px; border: 3px solid transparent;
-            border-top-color: var(--neon-cyan); border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        body { background: var(--dark-bg); color: #e6edf3; min-height: 100vh; display: flex; flex-direction: column; }
+        #mainLoader { position: fixed; inset: 0; background: var(--dark-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; }
+        .spinner { width: 40px; height: 40px; border: 3px solid transparent; border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Notificações */
-        #toast {
-            position: fixed; bottom: 20px; right: 20px; padding: 15px 25px;
-            background: var(--glass); border-left: 4px solid var(--neon-cyan);
-            color: var(--neon-cyan); font-weight: bold; border-radius: 4px;
-            transform: translateX(150%); transition: 0.5s; z-index: 10001;
-        }
-        #toast.show { transform: translateX(0); }
-
-        /* Header e Layout */
-        header {
-            padding: 20px 5%; background: var(--glass);
-            border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-        
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px; padding: 40px 5%;
-        }
-
-        .card {
-            background: var(--glass); border: 1px solid var(--border);
-            padding: 25px; border-radius: 12px; transition: 0.3s;
-        }
-        .card:hover { border-color: var(--neon-cyan); transform: translateY(-3px); }
-
-        .btn-neon {
-            width: 100%; padding: 12px; background: transparent;
-            border: 1px solid var(--neon-cyan); color: var(--neon-cyan);
-            font-weight: bold; cursor: pointer; border-radius: 4px;
-            text-transform: uppercase; margin-top: 15px;
-        }
-        .btn-neon:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
-
-        /* Modal de Bloqueio */
-        #payModal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; align-items: center; justify-content: center; z-index: 999;
-            backdrop-filter: blur(5px);
-        }
-        .pay-card {
-            background: var(--glass); border: 1px solid var(--neon-purple);
-            padding: 40px; border-radius: 15px; text-align: center; max-width: 400px;
-        }
+        header { padding: 20px 5%; background: var(--glass); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .card { background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 12px; margin: 40px 5%; }
+        .btn-neon { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); font-weight: bold; cursor: pointer; margin-top: 15px; }
+        #payModal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 999; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="mainLoader">
-        <div class="spinner"></div>
-        <p style="margin-top:15px; letter-spacing: 2px;">AUTENTICANDO SISTEMA...</p>
-    </div>
-
-    <div id="toast"></div>
+    <div id="mainLoader"><div class="spinner"></div><p style="margin-top:15px">SISTEMA INICIALIZANDO...</p></div>
 
     <div id="payModal">
-        <div class="pay-card">
-            <i class="fas fa-lock" style="font-size: 3rem; color: var(--neon-purple);"></i>
-            <h2 style="margin: 20px 0">ACESSO RESTRITO</h2>
-            <p style="color: #8b949e; margin-bottom: 20px;">Sua licença não foi detectada ou está pendente de ativação.</p>
-            <button class="btn-neon" onclick="window.open('SEU_LINK_MERCADO_PAGO', '_blank')" style="border-color: var(--neon-purple); color: var(--neon-purple);">ATIVAR LICENÇA VITALÍCIA</button>
+        <div style="background: var(--glass); padding: 40px; border-radius: 15px; border: 1px solid #bc13fe; max-width: 400px;">
+            <h2 style="color: #bc13fe">ACESSO BLOQUEADO</h2>
+            <p style="margin: 20px 0">Sua conta não possui uma licença ativa.</p>
+            <button class="btn-neon" onclick="window.location.reload()" style="border-color: #bc13fe; color: #bc13fe">VERIFICAR NOVAMENTE</button>
         </div>
     </div>
 
     <div id="app" style="display:none">
         <header>
-            <div class="logo">SMARTDESC.AI</div>
-            <button onclick="logout()" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-weight:bold;">SAIR</button>
+            <div style="color: var(--neon-cyan); font-weight: 800; font-size: 1.5rem">SMARTDESC.AI</div>
+            <button onclick="supabase.auth.signOut().then(()=>window.location.href='index.html')" style="background:none; border:none; color:red; cursor:pointer">SAIR</button>
         </header>
-
-        <main class="grid">
-            <div class="card">
-                <h3><i class="fas fa-robot"></i> Inteligência de Escrita</h3>
-                <p style="font-size: 0.8rem; color:#8b949e; margin-top:5px">Crie descrições que vendem em segundos.</p>
-                
-                <textarea id="descInput" placeholder="Nome do produto ou características..." 
-                    style="width:100%; margin:15px 0; padding:12px; background:#000; border:1px solid #333; color:#fff; border-radius:4px; height: 100px; resize: none;"></textarea>
-                
-                <button class="btn-neon" onclick="generateDesc()">GERAR DESCRIÇÃO</button>
-                
-                <div id="result" style="margin-top:20px; display:none; padding:15px; border-left:2px solid var(--neon-cyan); background: rgba(0,242,255,0.05); font-size:0.9rem; line-height:1.4;"></div>
-            </div>
-        </main>
+        <div class="card">
+            <h3>Gerador de Descrição</h3>
+            <textarea id="descInput" style="width:100%; margin:15px 0; padding:10px; background:#000; color:#fff; border:1px solid #333;"></textarea>
+            <button class="btn-neon" onclick="alert('IA Gerando...')">GERAR AGORA</button>
+        </div>
     </div>
 
     <script>
-        // CONFIGURAÇÃO SUPABASE
-        const URL_DB = 'https://mumsyszwnzkmxobvuomp.supabase.co';
-        const KEY_DB = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-        
-        // Criando a conexão de forma segura
-        const supabase = window.supabase.createClient(URL_DB, KEY_DB);
+        // Usei VAR aqui para NUNCA dar o erro de "já declarado" do seu print
+        var SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
+        var SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+        var supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        // FUNÇÃO DE NOTIFICAÇÃO
-        function notify(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        // VERIFICAÇÃO DE ACESSO
-        async function checkAccess() {
+        async function verificar() {
             try {
-                // 1. Verifica se tem usuário logado
-                const { data: { user }, error: authError } = await supabase.auth.getUser();
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) { window.location.href = 'index.html'; return; }
 
-                if (authError || !user) {
-                    console.log("Sem usuário autenticado.");
-                    window.location.href = 'index.html';
-                    return;
-                }
-
-                // 2. Busca o status de pagamento na tabela 'perfis'
-                const { data: profile, error: dbError } = await supabase
+                const { data: profile } = await supabase
                     .from('perfis')
                     .select('status_pagamento')
                     .eq('id', user.id)
                     .maybeSingle();
 
-                // 3. Esconde o loader
                 document.getElementById('mainLoader').style.display = 'none';
 
-                // 4. Lógica de liberação
                 if (profile && profile.status_pagamento === true) {
                     document.getElementById('app').style.display = 'block';
-                    notify("CONEXÃO ESTABELECIDA");
                 } else {
                     document.getElementById('payModal').style.display = 'flex';
                 }
-
-            } catch (err) {
-                console.error("Erro Geral:", err);
-                document.getElementById('mainLoader').innerHTML = "<p>ERRO DE CONEXÃO COM O NÚCLEO.</p>";
+            } catch (e) {
+                console.error(e);
+                alert("Erro de conexão. Tente novamente.");
             }
         }
-
-        // GERAR DESCRIÇÃO (Lógica Simples)
-        function generateDesc() {
-            const input = document.getElementById('descInput').value;
-            if(!input) return notify("INSIRA OS DADOS DO PRODUTO");
-
-            const resDiv = document.getElementById('result');
-            resDiv.style.display = 'block';
-            resDiv.innerHTML = "<i class='fas fa-sync fa-spin'></i> Processando com IA...";
-
-            setTimeout(() => {
-                resDiv.innerHTML = `<strong>PROPOSTA GERADA:</strong><br><br>
-                Eleve o nível do seu negócio com o novo ${input}. Unimos design futurista e performance extrema para garantir a melhor experiência do mercado. Aproveite o desconto de lançamento!`;
-            }, 1800);
-        }
-
-        // LOGOUT
-        async function logout() {
-            await supabase.auth.signOut();
-            window.location.href = 'index.html';
-        }
-
-        // Inicia a verificação ao carregar a página
-        window.onload = checkAccess;
+        window.onload = verificar;
     </script>
 </body>
 </html>
