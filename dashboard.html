@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart_Core | Painel de Controle</title>
+    <title>SmartDesc.Ai | Painel de Controle</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
@@ -98,14 +98,14 @@
         <div class="pay-card">
             <i class="fas fa-lock-open" style="font-size: 3rem; color: var(--neon-purple);"></i>
             <h2 style="margin: 20px 0">ACESSO PENDENTE</h2>
-            <p style="color: #8b949e; margin-bottom: 20px;">Ative sua licença vitalícia da Smart_Core para liberar as ferramentas.</p>
+            <p style="color: #8b949e; margin-bottom: 20px;">Ative sua licença vitalícia da SmartDesc.AI para liberar as ferramentas.</p>
             <button class="btn-neon" onclick="window.open('SEU_LINK_DO_MERCADO_PAGO', '_blank')" style="border-color: var(--neon-purple); color: var(--neon-purple);">ATIVAR AGORA</button>
         </div>
     </div>
 
     <div id="app" style="display:none">
         <header>
-            <div class="logo">SMART_CORE</div>
+            <div class="logo">SmarTdesc.AI</div>
             <button onclick="logout()" style="background:none; border:none; color:#ff4d4d; cursor:pointer">SAIR</button>
         </header>
         <div class="grid">
@@ -120,55 +120,72 @@
     </div>
 
     <script>
+    // 1. Configuração ÚNICA do cliente
     const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
     const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG'; 
     const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
+    // 2. Função de Notificação
     function notify(m) { 
         const t = document.getElementById('toast'); 
-        t.innerText = m; 
-        t.classList.add('show'); 
-        setTimeout(()=>t.classList.remove('show'), 3000); 
+        if(t) {
+            t.innerText = m; 
+            t.classList.add('show'); 
+            setTimeout(()=>t.classList.remove('show'), 3000); 
+        }
     }
 
+    // 3. Função Principal de Verificação
     async function checkAccess() {
+        console.log("Iniciando verificação de acesso..."); // Para você ver no console
         try {
             const { data: { user }, error: authError } = await supabase.auth.getUser();
             
             if (authError || !user) {
+                console.log("Usuário não logado, redirecionando...");
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Busca o status na tabela 'perfis'
+            console.log("Usuário logado:", user.id);
+
             const { data: profile, error: dbError } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
-                .maybeSingle(); // Usar maybeSingle evita erro se o perfil não existir
+                .maybeSingle();
 
-            // ESCONDE O LOADER (Independente de ter pago ou não)
+            // REMOVE O LOADER AGORA
             document.getElementById('mainLoader').style.display = 'none';
 
             if (profile && profile.status_pagamento === true) {
                 document.getElementById('app').style.display = 'block';
                 notify("BEM-VINDO AO COMANDO");
             } else {
-                // Se não achou perfil ou status é false/null
                 document.getElementById('payModal').style.display = 'flex';
             }
         } catch (err) {
-            console.error("Erro crítico:", err);
+            console.error("Erro no processo:", err);
             document.getElementById('mainLoader').innerHTML = "<p>Erro de conexão. Verifique o console.</p>";
         }
     }
 
+    // 4. Outras funções
     async function logout() { 
         await supabase.auth.signOut(); 
         window.location.href = 'index.html'; 
     }
 
-    // ... sua função generateDesc continua igual
+    function generateDesc() {
+        const val = document.getElementById('descInput').value;
+        if(!val) return notify("DIGITE O NOME DO PRODUTO");
+        const res = document.getElementById('result');
+        res.style.display = 'block';
+        res.innerHTML = "Processando descrição estratégica...";
+        setTimeout(()=> res.innerHTML = "<strong>SUGESTÃO:</strong> Desperte o desejo absoluto com o novo " + val + ". Tecnologia de ponta e estilo inigualável.", 2000);
+    }
+
+    // 5. DISPARO
     window.onload = checkAccess;
 </script>
 </body>
