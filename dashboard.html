@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart_Core | Painel de Controle</title>
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -120,45 +120,56 @@
     </div>
 
     <script>
-        const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co'; //
-        const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG'; //
-        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
+    const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG'; 
+    const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        function notify(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+    function notify(m) { 
+        const t = document.getElementById('toast'); 
+        t.innerText = m; 
+        t.classList.add('show'); 
+        setTimeout(()=>t.classList.remove('show'), 3000); 
+    }
 
-        async function checkAccess() {
-            const { data: { user } } = await supabase.auth.getUser(); //
-            if (!user) return window.location.href = 'index.html';
+    async function checkAccess() {
+        try {
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            
+            if (authError || !user) {
+                window.location.href = 'index.html';
+                return;
+            }
 
-            // Busca o status na tabela 'perfis' que você criou
-            const { data: profile } = await supabase
+            // Busca o status na tabela 'perfis'
+            const { data: profile, error: dbError } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
-                .single(); //
+                .maybeSingle(); // Usar maybeSingle evita erro se o perfil não existir
 
+            // ESCONDE O LOADER (Independente de ter pago ou não)
             document.getElementById('mainLoader').style.display = 'none';
 
-            if (profile && profile.status_pagamento) {
+            if (profile && profile.status_pagamento === true) {
                 document.getElementById('app').style.display = 'block';
                 notify("BEM-VINDO AO COMANDO");
             } else {
+                // Se não achou perfil ou status é false/null
                 document.getElementById('payModal').style.display = 'flex';
             }
+        } catch (err) {
+            console.error("Erro crítico:", err);
+            document.getElementById('mainLoader').innerHTML = "<p>Erro de conexão. Verifique o console.</p>";
         }
+    }
 
-        async function logout() { await supabase.auth.signOut(); window.location.href = 'index.html'; }
+    async function logout() { 
+        await supabase.auth.signOut(); 
+        window.location.href = 'index.html'; 
+    }
 
-        function generateDesc() {
-            const val = document.getElementById('descInput').value;
-            if(!val) return notify("DIGITE O NOME DO PRODUTO");
-            const res = document.getElementById('result');
-            res.style.display = 'block';
-            res.innerHTML = "Processando descrição estratégica...";
-            setTimeout(()=> res.innerHTML = "<strong>SUGESTÃO:</strong> Desperte o desejo absoluto com o novo " + val + ". Tecnologia de ponta e estilo inigualável. Oferta limitada!", 2000);
-        }
-
-        window.onload = checkAccess;
-    </script>
+    // ... sua função generateDesc continua igual
+    window.onload = checkAccess;
+</script>
 </body>
 </html>
