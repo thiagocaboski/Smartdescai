@@ -205,13 +205,16 @@
             const { data: { user } } = await supabase.auth.getUser();
 
             const response = await fetch(`${SB_URL}/functions/v1/mercado-pago-pix`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    amount: 49.90, 
-                    email: user.email
-                })
-            });
+    method: 'POST',
+    headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SB_KEY}` // Adicione essa linha aqui!
+    },
+    body: JSON.stringify({
+        amount: 49.90, 
+        email: user.email
+    })
+});
 
             const data = await response.json();
 
