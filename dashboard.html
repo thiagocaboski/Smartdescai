@@ -153,15 +153,16 @@
 
 
 <script>
-    // 1. CONFIGURAÇÃO ÚNICA DO SUPABASE
+    // 1. DECLARAÇÃO ÚNICA - Remova qualquer outra linha que defina 'supabase' ou 'SB_URL'
     const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
     const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
     const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-    // 2. VERIFICAÇÃO DE ACESSO E PAGAMENTO
+    // 2. FUNÇÃO DE VERIFICAÇÃO (Roda ao carregar a página)
     async function verificar() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
+            
             if (!user) { 
                 window.location.href = 'index.html'; 
                 return; 
@@ -169,17 +170,17 @@
 
             document.getElementById('userEmail').innerText = user.email;
 
-            // Busca o status de pagamento
+            // Busca o status na tabela 'perfis'
             const { data: profile } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
                 .maybeSingle();
 
-            // Remove o loader de carregamento
+            // Esconde o loader de sincronização
             document.getElementById('mainLoader').style.display = 'none';
 
-            // DECISÃO: Mostrar Dashboard ou Modal de Pix
+            // DECISÃO: Mostrar Dashboard ou Modal de Pagamento
             if (profile && profile.status_pagamento === true) {
                 document.getElementById('app').style.display = 'block';
                 document.getElementById('payModal').style.display = 'none';
@@ -190,6 +191,7 @@
             }
         } catch (e) {
             console.error("Erro na verificação:", e);
+            document.getElementById('mainLoader').style.display = 'none';
         }
     }
 
@@ -221,9 +223,9 @@
                 document.getElementById('qrImage').src = `data:image/png;base64,${qrCodeBase64}`;
                 document.getElementById('qrContainer').style.display = 'block';
                 document.getElementById('btnPagar').style.display = 'none';
-                document.getElementById('pixStatus').innerText = "Aguardando pagamento... O acesso será liberado automaticamente.";
+                document.getElementById('pixStatus').innerText = "Aguardando pagamento...";
                 
-                iniciarVerificacaoTempoReal(user.id);
+                iniciarMonitoramento(user.id);
             }
         } catch (error) {
             console.error(error);
@@ -233,8 +235,8 @@
         }
     }
 
-    // 4. MONITORAMENTO EM TEMPO REAL
-    function iniciarVerificacaoTempoReal(userId) {
+    // 4. MONITORAMENTO DO PAGAMENTO
+    function iniciarMonitoramento(userId) {
         const interval = setInterval(async () => {
             const { data: profile } = await supabase
                 .from('perfis')
@@ -246,10 +248,10 @@
                 clearInterval(interval);
                 window.location.reload(); 
             }
-        }, 5000); 
+        }, 5000);
     }
 
-    // 5. FUNÇÕES DE INTERFACE (GRÁFICO E LOGOUT)
+    // 5. GRÁFICO E AUXILIARES
     function inicializarGrafico() {
         const ctx = document.getElementById('marketingChart').getContext('2d');
         new Chart(ctx, {
@@ -278,6 +280,6 @@
         window.location.href = 'index.html';
     }
 
+    // Inicializa tudo
     window.onload = verificar;
-</script>w.onload = verificar;
-</script>
+</script>  
