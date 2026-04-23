@@ -155,7 +155,7 @@
     // 1. DECLARAÇÃO ÚNICA - Remova qualquer outra linha que defina 'supabase' ou 'SB_URL'
     const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
     const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-    const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
     // 2. FUNÇÃO DE VERIFICAÇÃO (Roda ao carregar a página)
     async function verificar() {
