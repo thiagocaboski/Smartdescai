@@ -151,53 +151,61 @@
         </div>
     </main>
 
+
     <script>
     // Configurações do Supabase
-    var SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
-    var SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-    var supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
+    const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+    const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
     // 1. Função que roda assim que a página carrega
     async function verificar() {
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            // Obtém o usuário atual
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
             
-            // Se não tiver usuário logado, manda de volta pra index
-            if (!user) { 
+            if (userError || !user) { 
                 window.location.href = 'index.html'; 
                 return; 
             }
             
-            document.getElementById('userEmail').innerText = user.email;
+            // Exibe o email do usuário na interface
+            const userEmailElem = document.getElementById('userEmail');
+            if (userEmailElem) userEmailElem.innerText = user.email;
 
-            // Busca o status de pagamento no banco de dados
-            const { data: profile } = await supabase
+            // Busca o status de pagamento no banco de dados (tabela 'perfis')
+            const { data: profile, error: profileError } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', user.id)
                 .maybeSingle();
 
-            // Esconde o loader principal
-            document.getElementById('mainLoader').style.display = 'none';
+            // Esconde o loader de carregamento
+            const mainLoader = document.getElementById('mainLoader');
+            if (mainLoader) mainLoader.style.display = 'none';
 
-            // DECISÃO: Liberar ou Bloquear
+            // DECISÃO: Liberar Dashboard ou Mostrar Modal de Pagamento
+            const appContainer = document.getElementById('app');
+            const payModal = document.getElementById('payModal');
+
             if (profile && profile.status_pagamento === true) {
-                document.getElementById('app').style.display = 'block';
-                document.getElementById('payModal').style.display = 'none';
+                if (appContainer) appContainer.style.display = 'block';
+                if (payModal) payModal.style.display = 'none';
                 inicializarGrafico();
             } else {
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('payModal').style.display = 'flex';
+                if (appContainer) appContainer.style.display = 'none';
+                if (payModal) payModal.style.display = 'flex';
             }
         } catch (e) {
-            console.error(e);
-            alert("Erro ao conectar com o servidor.");
+            console.error("Erro na verificação:", e);
         }
     }
 
     // 2. Função para gerar o Pix via Edge Function
     async function gerarPix() {
         const btn = document.getElementById('btnPagar');
+        if (!btn) return;
+
         btn.innerText = "GERANDO...";
         btn.disabled = true;
 
@@ -205,56 +213,63 @@
             const { data: { user } } = await supabase.auth.getUser();
 
             const response = await fetch(`${SB_URL}/functions/v1/mercado-pago-pix`, {
-    method: 'POST',
-    headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SB_KEY}` // Adicione essa linha aqui!
-    },
-    body: JSON.stringify({
-        amount: 49.90, 
-        email: user.email
-    })
-});
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SB_KEY}`
+                },
+                body: JSON.stringify({
+                    amount: 49.90, 
+                    email: user.email
+                })
+            });
+
+            if (!response.ok) throw new Error('Falha na resposta da função');
 
             const data = await response.json();
 
+            // Se o Mercado Pago retornar os dados do QR Code
             if (data.point_of_interaction) {
                 const qrCodeBase64 = data.point_of_interaction.transaction_data.qr_code_base64;
+                
                 document.getElementById('qrImage').src = `data:image/png;base64,${qrCodeBase64}`;
                 document.getElementById('qrContainer').style.display = 'block';
                 document.getElementById('btnPagar').style.display = 'none';
                 document.getElementById('pixStatus').innerText = "Aguardando pagamento... O acesso será liberado automaticamente.";
                 
-                // Começa a monitorar o banco de dados
+                // Inicia o monitoramento do banco para detectar o pagamento
                 iniciarVerificacaoPagamento(user.id);
             }
         } catch (error) {
-            console.error(error);
-            alert("Erro ao gerar Pix.");
+            console.error("Erro ao gerar Pix:", error);
+            alert("Erro ao gerar o QR Code. Tente novamente.");
             btn.disabled = false;
             btn.innerText = "RENOVAR ACESSO";
         }
     }
 
-    // 3. Monitoramento em tempo real
+    // 3. Monitoramento em tempo real (Pooling)
     function iniciarVerificacaoPagamento(userId) {
         const interval = setInterval(async () => {
             const { data: profile } = await supabase
                 .from('perfis')
                 .select('status_pagamento')
                 .eq('id', userId)
-                .single();
+                .maybeSingle();
 
             if (profile && profile.status_pagamento === true) {
                 clearInterval(interval);
-                window.location.reload(); 
+                window.location.reload(); // Recarrega a página para liberar o Dashboard
             }
-        }, 5000); 
+        }, 5000); // Verifica a cada 5 segundos
     }
 
-    // 4. Funções de Interface
+    // 4. Funções de Interface e Gráfico
     function inicializarGrafico() {
-        const ctx = document.getElementById('marketingChart').getContext('2d');
+        const chartCanvas = document.getElementById('marketingChart');
+        if (!chartCanvas) return;
+
+        const ctx = chartCanvas.getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -281,5 +296,6 @@
         window.location.href = 'index.html';
     }
 
+    // Inicialização
     window.onload = verificar;
 </script>
