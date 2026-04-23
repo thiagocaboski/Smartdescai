@@ -84,12 +84,19 @@
     <div id="mainLoader"><div class="spinner"></div><p style="margin-top:15px; letter-spacing: 2px;">SINCRONIZANDO MÉTRICAS...</p></div>
 
     <div id="payModal">
-        <div style="background: var(--glass); padding: 40px; border-radius: 15px; border: 1px solid #ff0055; text-align: center;">
-            <h2 style="color: #ff0055">ACESSO BLOQUEADO</h2>
-            <p style="margin: 20px 0">Sua assinatura Premium expirou. Renove para continuar escalando.</p>
-            <button class="btn-neon" onclick="window.location.reload()" style="border-color: #ff0055; color: #ff0055">RENOVAR ACESSO</button>
+    <div style="background: var(--glass); padding: 40px; border-radius: 15px; border: 1px solid var(--neon-emerald); text-align: center; max-width: 400px;">
+        <h2 style="color: var(--neon-emerald)">ATIVE SEU ACESSO</h2>
+        <p style="margin: 20px 0">Para acessar a inteligência da <b>SmartDescAi</b>, finalize seu pagamento via Pix.</p>
+        
+        <div id="qrContainer" style="display:none; background: #fff; padding: 10px; margin: 20px auto; width: 220px; height: 220px;">
+            <img id="qrImage" src="" alt="QR Code Pix" style="width: 100%;">
         </div>
+
+        <button id="btnPagar" class="btn-neon" onclick="gerarPix()">GERAR QR CODE PIX</button>
+        
+        <p id="pixStatus" style="margin-top: 15px; font-size: 0.8rem; color: #888;"></p>
     </div>
+</div>
 
     <aside>
         <div style="color: var(--neon-emerald); font-weight: 800; font-size: 1.8rem; margin-bottom: 40px;">MARKETING.OS</div>
@@ -145,77 +152,131 @@
     </main>
 
     <script>
-        var SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
-        var SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-        var supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    // Configurações do Supabase
+    var SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
+    var SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
+    var supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-        async function verificar() {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) { window.location.href = 'index.html'; return; }
-                
-                document.getElementById('userEmail').innerText = user.email;
-
-                const { data: profile } = await supabase
-                    .from('perfis')
-                    .select('status_pagamento')
-                    .eq('id', user.id)
-                    .maybeSingle();
-
-                document.getElementById('mainLoader').style.display = 'none';
-
-                if (profile && profile.status_pagamento === true) {
-                    document.getElementById('app').style.display = 'block';
-                    inicializarGrafico();
-                } else {
-                    document.getElementById('payModal').style.display = 'flex';
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao conectar com o servidor de dados.");
+    // 1. Função que roda assim que a página carrega
+    async function verificar() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            // Se não tiver usuário logado, manda de volta pra index
+            if (!user) { 
+                window.location.href = 'index.html'; 
+                return; 
             }
-        }
+            
+            document.getElementById('userEmail').innerText = user.email;
 
-        function inicializarGrafico() {
-            const ctx = document.getElementById('marketingChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    datasets: [{
-                        label: 'Conversões Geradas (R$)',
-                        data: [1200, 1900, 1500, 2500, 2200, 3000, 4200],
-                        borderColor: '#50fa7b',
-                        backgroundColor: 'rgba(80, 250, 123, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
-                        x: { grid: { display: false }, ticks: { color: '#888' } }
-                    }
-                }
+            // Busca o status de pagamento no banco de dados
+            const { data: profile } = await supabase
+                .from('perfis')
+                .select('status_pagamento')
+                .eq('id', user.id)
+                .maybeSingle();
+
+            // Esconde o loader principal
+            document.getElementById('mainLoader').style.display = 'none';
+
+            // DECISÃO: Liberar ou Bloquear
+            if (profile && profile.status_pagamento === true) {
+                document.getElementById('app').style.display = 'block';
+                document.getElementById('payModal').style.display = 'none';
+                inicializarGrafico();
+            } else {
+                document.getElementById('app').style.display = 'none';
+                document.getElementById('payModal').style.display = 'flex';
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Erro ao conectar com o servidor.");
+        }
+    }
+
+    // 2. Função para gerar o Pix via Edge Function
+    async function gerarPix() {
+        const btn = document.getElementById('btnPagar');
+        btn.innerText = "GERANDO...";
+        btn.disabled = true;
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const response = await fetch(`${SB_URL}/functions/v1/mercado-pago-pix`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: 49.90, 
+                    email: user.email
+                })
             });
-        }
 
-        async function logout() {
-            await supabase.auth.signOut();
-            window.location.href = 'index.html';
-        }
+            const data = await response.json();
 
-        function chamarIA() {
-            const texto = document.getElementById('descInput').value;
-            if(!texto) return alert("Por favor, insira um briefing para a IA.");
-            alert("Processando estratégia de marketing... Analisando concorrência e público-alvo.");
-            // Lógica da API aqui
+            if (data.point_of_interaction) {
+                const qrCodeBase64 = data.point_of_interaction.transaction_data.qr_code_base64;
+                document.getElementById('qrImage').src = `data:image/png;base64,${qrCodeBase64}`;
+                document.getElementById('qrContainer').style.display = 'block';
+                document.getElementById('btnPagar').style.display = 'none';
+                document.getElementById('pixStatus').innerText = "Aguardando pagamento... O acesso será liberado automaticamente.";
+                
+                // Começa a monitorar o banco de dados
+                iniciarVerificacaoPagamento(user.id);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao gerar Pix.");
+            btn.disabled = false;
+            btn.innerText = "RENOVAR ACESSO";
         }
+    }
 
-        window.onload = verificar;
-    </script>
-</body>
-</html>
+    // 3. Monitoramento em tempo real
+    function iniciarVerificacaoPagamento(userId) {
+        const interval = setInterval(async () => {
+            const { data: profile } = await supabase
+                .from('perfis')
+                .select('status_pagamento')
+                .eq('id', userId)
+                .single();
+
+            if (profile && profile.status_pagamento === true) {
+                clearInterval(interval);
+                window.location.reload(); 
+            }
+        }, 5000); 
+    }
+
+    // 4. Funções de Interface
+    function inicializarGrafico() {
+        const ctx = document.getElementById('marketingChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Conversões (R$)',
+                    data: [1200, 1900, 1500, 2500, 2200, 3000, 4200],
+                    borderColor: '#50fa7b',
+                    backgroundColor: 'rgba(80, 250, 123, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    async function logout() {
+        await supabase.auth.signOut();
+        window.location.href = 'index.html';
+    }
+
+    window.onload = verificar;
+</script>
