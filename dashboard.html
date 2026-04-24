@@ -1039,116 +1039,7 @@
 
         </div><!-- /content -->
     </main><!-- /main -->
-
 <script>
-    // ─── CONFIG ───
-    const SB_URL = 'https://mumsyszwnzkmxobvuomp.supabase.co';
-    const SB_KEY = 'sb_publishable_I_U8-E8YjoY1wmntpvjZgw_evNwUMhG';
-    const sb = window.supabase.createClient(SB_URL, SB_KEY);
-
-    // ─── DATA TOP BAR ───
-    function setDate() {
-        const d = new Date();
-        document.getElementById('topDate').textContent =
-            d.toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
-    }
-    setDate();
-
-    // ─── NAV ───
-    const sectionTitles = {
-        dashboard: 'Dashboard <span>ROAS</span>',
-        copy: 'Copywriter <span>IA</span>',
-        trafico: 'Gestão de <span>Tráfego</span>',
-        funil: 'Funil de <span>Leads</span>',
-        relatorios: '<span>Relatórios</span>',
-        leads: 'Base de <span>Leads</span>',
-        config: '<span>Configurações</span>',
-    };
-    function showSection(id, el) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('sec-' + id).classList.add('active');
-        if (el) el.classList.add('active');
-        document.getElementById('sectionTitle').innerHTML = sectionTitles[id] || id;
-    }
-
-    // ─── AUTH ───
-    async function verificar() {
-        const { data: { user } } = await sb.auth.getUser();
-        if (!user) { window.location.href = 'index.html'; return; }
-
-        const email = user.email;
-        document.getElementById('userEmail').textContent = email;
-        if (document.getElementById('configEmail')) document.getElementById('configEmail').value = email;
-        const initials = email.slice(0,2).toUpperCase();
-        document.getElementById('userAvatar').textContent = initials;
-
-        const { data: profile } = await sb.from('perfis').select('status_pagamento').eq('id', user.id).maybeSingle();
-
-        document.getElementById('mainLoader').style.display = 'none';
-
-        if (profile && profile.status_pagamento === true) {
-            document.getElementById('app').style.display = 'flex';
-            document.getElementById('payModal').style.display = 'none';
-            initCharts();
-            gerarLeads();
-        } else {
-            document.getElementById('app').style.display = 'flex';
-            document.getElementById('payModal').style.display = 'flex';
-        }
-    }
-
-    async function logout() {
-        await sb.auth.signOut();
-        window.location.href = 'index.html';
-    }
-
-    // ─── PIX ───
-    let timerInterval;
-    async function gerarPix() {
-        const btn = document.getElementById('btnPagar');
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> GERANDO...';
-        btn.disabled = true;
-        try {
-            const { data: { user } } = await sb.auth.getUser();
-            const res = await fetch(`${SB_URL}/functions/v1/mercado-pago-pix`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SB_KEY}` },
-                body: JSON.stringify({ amount: 49.90, email: user.email })
-            });
-            const data = await res.json();
-            if (data.point_of_interaction) {
-                const qr = data.point_of_interaction.transaction_data.qr_code_base64;
-                document.getElementById('qrImage').src = `data:image/png;base64,${qr}`;
-                document.getElementById('qrContainer').style.display = 'block';
-                btn.style.display = 'none';
-                document.getElementById('pixStatus').textContent = '⏳ Aguardando confirmação do pagamento...';
-                const timer = document.getElementById('payTimer');
-                timer.style.display = 'block';
-                let secs = 900;
-                timerInterval = setInterval(() => {
-                    secs--;
-                    const m = String(Math.floor(secs/60)).padStart(2,'0');
-                    const s = String(secs%60).padStart(2,'0');
-                    document.getElementById('timerCount').textContent = `${m}:${s}`;
-                    if(secs <= 0) clearInterval(timerInterval);
-                }, 1000);
-                iniciarMonitoramento(user.id);
-            }
-        } catch(e) {
-            console.error(e);
-            btn.innerHTML = '<i class="fas fa-qrcode"></i> TENTAR NOVAMENTE';
-            btn.disabled = false;
-        }
-    }
-
-    function iniciarMonitoramento(userId) {
-        const iv = setInterval(async () => {
-            const { data: p } = await sb.from('perfis').select('status_pagamento').eq('id', userId).maybeSingle();
-            if (p && p.status_pagamento === true) { clearInterval(iv); clearInterval(timerInterval); window.location.reload(); }
-        }, 5000);
-    }
-
     // ─── CHARTS ───
     function initCharts() {
         // Main
@@ -1316,7 +1207,7 @@ Formate com: HEADLINE, CORPO DO ANÚNCIO e CTA. Seja direto, persuasivo e use ga
         el.innerHTML = copyHistory.slice(0,3).map(h =>
             `<div style="padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:8px;">
                 <div style="font-size:0.8rem;color:var(--green)">${h.tipo}</div>
-                <div style="font-size:0.83rem;color:var(--text-muted);margin-top:4px;">${h.texto}</div>
+                /<div style="font-size:0.83rem;color:var(--text-muted);margin-top:4px;">${h.texto}</div>
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">${h.hora}</div>
             </div>`
         ).join('');
